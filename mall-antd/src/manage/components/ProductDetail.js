@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../index.css';
 import { Card, Col, Row } from 'antd';
 import { Carousel } from 'antd';
 import { Menu, Icon } from 'antd';

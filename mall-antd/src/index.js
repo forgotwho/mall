@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import getRoutes from './routes/routes.js';
+import getRoutes from './front/routes/routes.js';
 
 ReactDOM.render(
   getRoutes(),

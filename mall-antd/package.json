@@ -1,7 +1,8 @@
 {
   "private": true,
   "entry": {
-    "index": "./src/index.js"
+    "index": "./src/index.js",
+    "manage": "./src/manage.js"
   },
   "dependencies": {
     "antd": "^2.1.0",
@@ -31,7 +32,7 @@
     "lint"
   ],
   "scripts": {
-    "build": "atool-build",
+    "build": "atool-build -w",
     "lint": "eslint --ext .js,.jsx src/",
     "start": "dora --plugins webpack",
     "test": "atool-test-mocha ./**/__tests__/*-test.js"

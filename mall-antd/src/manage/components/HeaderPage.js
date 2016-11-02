@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../index.css';
 import { Input } from 'antd';
 import { Menu, Icon } from 'antd';
 const SubMenu = Menu.SubMenu;
