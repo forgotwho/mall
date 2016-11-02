@@ -1,7 +1,5 @@
 package org.webfunny.mall.service.entity;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,9 +15,6 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private String state;
-    private Date createTime;
-	private Date updateTime;
 
     protected User() {}
     
@@ -28,19 +23,11 @@ public class User {
         this.password = MD5Encoder.encode(password.getBytes());
     }
 
-    public User(String username, String password,String state) {
-        this.username = username;
-        this.password = MD5Encoder.encode(password.getBytes());
-        this.state = state;
-        this.createTime = new Date();
-        this.updateTime = new Date();
-    }
-
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, username='%s', state='%s']",
-                id, username, state);
+                "User[id=%d, username='%s']",
+                id, username);
     }
 
 	public Long getId() {
@@ -53,18 +40,6 @@ public class User {
 
 	public String getPassword() {
 		return password;
-	}
-	
-	public String getState() {
-		return state;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
 	}
 }
 
