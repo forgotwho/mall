@@ -1,342 +1,116 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import { Input } from 'antd';
 import { Card, Col, Row } from 'antd';
 import { Carousel } from 'antd';
+import { Input } from 'antd';
 import { withRouter } from 'react-router';
 
-import HeaderPage from './HeaderPage.js';
+import Header from './Header.js';
+import Menu from './Menu.js';
+import Banner from './Banner.js';
+import Line from './Line.js';
+import Footer from './Footer.js';
 
-const HomePage = React.createClass({
-  handleMore(value) {
-    event.preventDefault();
-	  this.props.router.push("/product");
-  },
-  handleDetail(value) {
-    event.preventDefault();
-	  this.props.router.push("/product/detail/1");
+const ProductItem = withRouter(React.createClass({
+  handleClick(){
+    this.props.router.push("/product/detail/1");
   },
   render() {
   return (
     <div>
-      <Row style={{height:30,marginTop:20,marginBottom:0}}>
-        <Col lg={4} md={4} offset={2} sm={{span:0,offset:0}} xs={{span:0,offset:0}} style={{height:40,background:'#989898',textAlign:'center'}}>
-          <h2><a href="#/">首页</a></h2>
-        </Col>
-        <Col lg={4} md={4} sm={{span:0,offset:0}} xs={{span:0,offset:0}} style={{height:40,background:'#ededed',textAlign:'center'}}>
-          <h2><a href="#/product">所有产品</a></h2>
-        </Col>
-        <Col lg={4} md={4} sm={{span:0,offset:0}} xs={{span:0,offset:0}} style={{height:40,background:'#ededed',textAlign:'center'}}>
-          <h2>关于我们</h2>
-        </Col>
-        <Col lg={4} md={4} sm={{span:0,offset:0}} xs={{span:0,offset:0}} style={{height:40,background:'#ededed',textAlign:'center'}}>
-          <h2>联系我们</h2>
-        </Col>
-        <Col lg={4} md={4} sm={{span:0,offset:0}} xs={{span:0,offset:0}} style={{height:40,background:'#ededed',textAlign:'center'}}>
-         <h2>收藏</h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={24} md={24} sm={{span:0,offset:0}} xs={{span:0,offset:0}} style={{margin:0,padding:0}}>
-          <Carousel autoplay>
-            <div><img width="100%" src="/images/banner01.jpg" /></div>
-          </Carousel>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={{span:20,offset:2}} md={{span:20,offset:2}} sm={{span:24,offset:0}} xs={{span:24,offset:0}} style={{marginTop:10,marginBottom:10,height:40,background:'#ededed'}} onClick={this.handleMore}>
-          <div style={{float:'left',margin:0}}>
-            <img width="100%" src="/images/tag01.png" />
+      <Card style={{float:'left',width:'20%'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
+        <img src={this.props.data.image} />
+        <div>
+          <div style={{float:'left',marginLeft:10}}>
+            <h3>{this.props.data.name}</h3>
           </div>
-          <div style={{float:'right',margin:0,paddingTop:5,paddingRight:10}}>
-            <h2>more&nbsp;></h2>
+          <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
+            <div style={{float:'left',width:10,height:10,background:'red'}}></div>
+            <div style={{float:'right',width:10,height:10,background:'black'}}></div>
           </div>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={{span:4,offset:2}} md={{span:4,offset:2}} sm={{span:12,offset:0}} xs={{span:12,offset:0}}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>蓝山</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>星河</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>流沙</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>玛瑙</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>蜜恋</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <div style={{height:20}}></div>
-      <Row>
-        <Col lg={{span:20,offset:2}} md={{span:20,offset:2}} sm={{span:24,offset:0}} xs={{span:24,offset:0}} style={{marginTop:10,marginBottom:10,height:40,background:'#ededed'}} onClick={this.handleMore}>
-          <div style={{float:'left',margin:0}}>
-            <img width="100%" src="/images/tag02.png" />
+        </div>
+      </Card>
+    </div>
+  );
+  }
+}));
+
+const ProductList = React.createClass({
+  render() {
+    var itemList = this.props.data.list.map(function(data) {
+      return (
+        <ProductItem data={data}/>
+      );
+    });
+  return (
+    <div>
+      <Row type="flex" justify="center">
+        <Col style={{width:990,height:40,background:'#eeeeee'}}>
+          <div style={{width:250,height:40,float:'left'}}>
+            <img src={this.props.data.tag.image} />
           </div>
-          <div style={{float:'right',margin:0,paddingTop:5,paddingRight:10}}>
-            <h2>more&nbsp;></h2>
+          <div style={{height:40,marginRight:15,float:'right'}}>
+            <p style={{fontSize:16,padding:5}}>more ></p>
           </div>
         </Col>
-      </Row>
-      <Row>
-        <Col lg={{span:4,offset:2}} md={{span:4,offset:2}} sm={{span:12,offset:0}} xs={{span:12,offset:0}}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>蓝山</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>星河</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>流沙</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>玛瑙</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>蜜恋</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
+        <Line/>
+        <Col style={{width:990,height:220,background:'#eeeeee'}}>
+          {itemList}
         </Col>
       </Row>
-      <div style={{height:20}}></div>
-      <Row>
-        <Col lg={{span:20,offset:2}} md={{span:20,offset:2}} sm={{span:24,offset:0}} xs={{span:24,offset:0}} style={{marginTop:10,marginBottom:10,height:40,background:'#ededed'}} onClick={this.handleMore}>
-          <div style={{float:'left',margin:0}}>
-            <img width="100%" src="/images/tag03.png" />
-          </div>
-          <div style={{float:'right',margin:0,paddingTop:5,paddingRight:10}}>
-            <h2>more&nbsp;></h2>
-          </div>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={{span:4,offset:2}} md={{span:4,offset:2}} sm={{span:12,offset:0}} xs={{span:12,offset:0}}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>蓝山</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>星河</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>流沙</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>玛瑙</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col lg={4} md={4} sm={12} xs={12}>
-          <Card style={{}} bodyStyle={{ padding: 20 }} onClick={this.handleDetail}>
-            <div >
-              <img width="100%" src="/images/eye01.png" />
-            </div>
-            <div>
-              <div style={{float:'left',margin:0}}>
-                <h3>蜜恋</h3>
-              </div>
-              <div style={{float:'right',width:30,margin:3}}>
-                <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-                <div style={{float:'right',width:10,height:10,background:'black'}}></div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <div style={{height:40}}></div>
-      <Row style={{height:100,marginTop:20,marginBottom:50}}>
-        <Col span={3} offset={6}>
-          关于我们
-        </Col>
-        <Col span={3}>
-          我们的产品
-        </Col>
-        <Col span={3}>
-          微信公众号
-        </Col>
-        <Col span={3}>
-          备案号
-        </Col>
-      </Row>
+    </div>
+  );
+  }
+});
+
+var dataList1 = {
+  tag:{name:"14.00mm",image:"images/02.png"},
+  list:[
+    {id: 1, name: "蓝山", image: "images/03.png",clols:["red","black"]},
+    {id: 2, name: "星河", image: "images/03.png",clols:["red","black"]},
+    {id: 3, name: "流沙", image: "images/03.png",clols:["red","black"]},
+    {id: 4, name: "玛瑙", image: "images/03.png",clols:["red","black"]},
+    {id: 4, name: "蜜恋", image: "images/03.png",clols:["red","black"]}
+  ]
+};
+
+var dataList2 = {
+  tag:{name:"14.00mm",image:"images/02.png"},
+  list:[
+    {id: 1, name: "蓝山2", image: "images/03.png",clols:["red","black"]},
+    {id: 2, name: "星河2", image: "images/03.png",clols:["red","black"]},
+    {id: 3, name: "流沙2", image: "images/03.png",clols:["red","black"]},
+    {id: 4, name: "玛瑙2", image: "images/03.png",clols:["red","black"]},
+    {id: 4, name: "蜜恋2", image: "images/03.png",clols:["red","black"]}
+  ]
+};
+
+var dataList3 = {
+  tag:{name:"14.00mm",image:"images/02.png"},
+  list:[
+    {id: 1, name: "蓝山3", image: "images/03.png",clols:["red","black"]},
+    {id: 2, name: "星河3", image: "images/03.png",clols:["red","black"]},
+    {id: 3, name: "流沙3", image: "images/03.png",clols:["red","black"]},
+    {id: 4, name: "玛瑙3", image: "images/03.png",clols:["red","black"]},
+    {id: 4, name: "蜜恋3", image: "images/03.png",clols:["red","black"]}
+  ]
+};
+
+const HomePage = React.createClass({
+  render() {
+  return (
+    <div style={{minWidth:990}}>
+      <Header/>
+      <Menu menuId={1}/>
+      <Banner/>
+      <Line/>
+      <ProductList data={dataList1}/>
+      <Line/>
+      <ProductList data={dataList2}/>
+      <Line/>
+      <ProductList data={dataList3}/>
+      <Line/>
+      <Footer/>
     </div>
   );
   }
