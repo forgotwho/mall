@@ -15,11 +15,13 @@ const Header = React.createClass({
   return (
     <div style={{minWidth:990}}>
       <Row type="flex" justify="center">
-        <Col style={{width:990,height:120,textAlign:'center'}}>
-          <div style={{float:'left',width:'335',height:'35',marginTop:35}}>
+        <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} style={{width:990,height:120,textAlign:'center'}}>
+          <div style={{float:'left',width:335,height:35,marginTop:35}}>
             <img src="images/logo.png" />
           </div>
-          <div style={{float:'left',marginLeft:40,marginTop:45}}><p style={{fontSize:20,color:'#999999'}}>New · Essential · Original</p></div>
+          <div style={{float:'left',marginLeft:40,marginTop:45}}>
+            <p style={{fontSize:20,color:'#999999'}}>New · Essential · Original</p>
+          </div>
           <div style={{float:'right',textAlign:'left',width:294,marginTop:45}}>
             <div style={{float:'left',width:260,marginTop:0}}>
               <Input size="large" style={{borderRadius:0,height:34}}/>
@@ -35,4 +37,4 @@ const Header = React.createClass({
   }
 });
 
-export default withRouter(Header);
+export default Header;

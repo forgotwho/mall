@@ -6,7 +6,7 @@ import { Input } from 'antd';
 import { withRouter } from 'react-router';
 
 import Header from './Header.js';
-import Menu from './Menu.js';
+import Menu from './MenuBar.js';
 import Line from './Line.js';
 import Footer from './Footer.js';
 
@@ -17,11 +17,13 @@ const ProductItem = withRouter(React.createClass({
   render() {
   return (
     <div>
-      <Card style={{float:'left',width:'20%'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
-        <img src="images/03.png" />
+      <Card style={{float:'left',width:'50%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
+        <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
+          <img width="100%" height="100%" src={this.props.data.image} />
+        </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
-            <h3>蓝山</h3>
+            <p style={{fontSize:28}}>{this.props.data.name}</p>
           </div>
           <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
             <div style={{float:'left',width:10,height:10,background:'red'}}></div>
@@ -34,17 +36,73 @@ const ProductItem = withRouter(React.createClass({
   }
 }));
 
-const ProductList = React.createClass({
+const ProductItem2 = withRouter(React.createClass({
+  handleClick(){
+    this.props.router.push("/product/detail/1");
+  },
   render() {
   return (
     <div>
+      <Card style={{float:'left',width:'20%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
+        <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
+          <img width="100%" height="100%" src={this.props.data.image} />
+        </div>
+        <div>
+          <div style={{float:'left',marginLeft:10}}>
+            <p style={{fontSize:16}}>{this.props.data.name}</p>
+          </div>
+          <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
+            <div style={{float:'left',width:10,height:10,background:'red'}}></div>
+            <div style={{float:'right',width:10,height:10,background:'black'}}></div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+  }
+}));
+
+var dataList1 = {
+  tag:{name:"14.00mm",image:"images/02.png"},
+  list:[
+    {id: 1, name: "蓝山", image: "images/21.png",clols:["red","black"]},
+    {id: 2, name: "星河", image: "images/22.png",clols:["red","black"]},
+    {id: 3, name: "流沙", image: "images/23.png",clols:["red","black"]},
+    {id: 4, name: "玛瑙", image: "images/24.png",clols:["red","black"]},
+    {id: 5, name: "蜜恋", image: "images/25.png",clols:["red","black"]},
+    {id: 6, name: "蓝山", image: "images/21.png",clols:["red","black"]},
+    {id: 7, name: "星河", image: "images/22.png",clols:["red","black"]},
+    {id: 8, name: "流沙", image: "images/23.png",clols:["red","black"]},
+    {id: 9, name: "玛瑙", image: "images/24.png",clols:["red","black"]},
+    {id: 10, name: "蜜恋", image: "images/25.png",clols:["red","black"]},
+    {id: 11, name: "蓝山", image: "images/21.png",clols:["red","black"]},
+    {id: 12, name: "星河", image: "images/22.png",clols:["red","black"]},
+    {id: 13, name: "流沙", image: "images/23.png",clols:["red","black"]},
+    {id: 14, name: "玛瑙", image: "images/24.png",clols:["red","black"]},
+    {id: 15, name: "蜜恋", image: "images/25.png",clols:["red","black"]}
+  ]
+};
+
+const ProductList = React.createClass({
+  render() {
+    var itemList = this.props.data.list.map(function(data) {
+      return (
+        <ProductItem data={data} key={data.id}/>
+      );
+    });
+    var itemList2 = this.props.data.list.map(function(data) {
+      return (
+        <ProductItem2 data={data} key={data.id}/>
+      );
+    });
+  return (
+    <div>
       <Row type="flex" justify="center">
-        <Col style={{width:990,height:220,background:'#eeeeee'}}>
-          <ProductItem/>
-          <ProductItem/>
-          <ProductItem/>
-          <ProductItem/>
-          <ProductItem/>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990}}>
+          {itemList}
+        </Col>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990}}>
+          {itemList2}
         </Col>
       </Row>
     </div>
@@ -59,11 +117,7 @@ const ProductPage = React.createClass({
       <Header/>
       <Menu menuId={2}/>
       <Line/>
-      <ProductList/>
-      <Line/>
-      <ProductList/>
-      <Line/>
-      <ProductList/>
+      <ProductList data={dataList1}/>
       <Line/>
       <Footer/>
     </div>

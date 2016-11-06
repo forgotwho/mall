@@ -7,7 +7,7 @@ import { Button } from 'antd';
 import { withRouter } from 'react-router';
 
 import Header from './Header.js';
-import Menu from './Menu.js';
+import Menu from './MenuBar.js';
 import Line from './Line.js';
 import Footer from './Footer.js';
 
