@@ -19,6 +19,7 @@ export default function() {
               <Route path="product" component="div">
 					       <IndexRoute component={ ProductPage } />
 				         <Route path="detail/:id" component={ ProductDetail } />
+				         <Route path="tag/:name" component={ ProductPage } />
 					       <Route path="*" component={ PageNotFound } />
               </Route>
               <Route path="about" component={AboutUs}/>

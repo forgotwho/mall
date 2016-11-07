@@ -11,6 +11,12 @@ const Header = React.createClass({
   handleDetail(value) {
     event.preventDefault();
   },
+  handleClick(){
+    var tag = document.getElementById("searchInput").value;
+    if(tag!=""){
+      this.props.router.push("/product/tag/"+tag);
+    }
+  },
   render() {
   return (
     <div style={{minWidth:990}}>
@@ -24,10 +30,10 @@ const Header = React.createClass({
           </div>
           <div style={{float:'right',textAlign:'left',width:294,marginTop:45}}>
             <div style={{float:'left',width:260,marginTop:0}}>
-              <Input size="large" style={{borderRadius:0,height:34}}/>
+              <Input id="searchInput" size="large" style={{borderRadius:0,height:34}}/>
             </div>
             <div style={{float:'right',width:34,marginTop:0}}>
-              <img src="images/04.png" />
+              <img src="images/04.png" onClick={this.handleClick}/>
             </div>
           </div>
         </Col>
@@ -37,4 +43,4 @@ const Header = React.createClass({
   }
 });
 
-export default Header;
+export default withRouter(Header);

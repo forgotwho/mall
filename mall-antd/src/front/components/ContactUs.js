@@ -19,12 +19,20 @@ const ContactUs = React.createClass({
       <Menu menuId={4}/>
       <Line/>
       <Row type="flex" justify="center">
-        <Col style={{width:990,height:400,textAlign:'center'}}>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990,height:400,textAlign:'center'}}>
+          <div style={{textAlign:'left'}}><p style={{color:'#333333',fontSize:24}}>请将您的问题与您的联系方式一同发送给我们，我们会尽快与您取得联系</p></div>
+          <div style={{width:'100%',marginTop:30}}><Input type="textarea" autosize={{ minRows: 10, maxRows: 12 }}/></div>
+          <div style={{marginTop:30}}>
+            <Button type="primary" style={{float:'left',width:100,height:40,background:'#999999',border:0,fontSize:24}}>确定</Button>
+            <Button type="primary" style={{float:'left',marginLeft:40,width:100,height:40,background:'#eeeeee',border:0,fontSize:24}}>清空</Button>
+          </div>
+        </Col>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,height:400,textAlign:'center'}}>
           <div style={{textAlign:'left'}}><p style={{color:'#333333',fontSize:16}}>请将您的问题与您的联系方式一同发送给我们，我们会尽快与您取得联系</p></div>
           <div style={{width:600,marginTop:30}}><Input type="textarea" autosize={{ minRows: 10, maxRows: 12 }}/></div>
           <div style={{marginTop:30}}>
-            <Button type="primary" style={{float:'left',width:100,height:40,background:'#999999',border:0}}>确定</Button>
-            <Button type="primary" style={{float:'left',marginLeft:40,width:100,height:40,background:'#eeeeee',border:0}}>清空</Button>
+            <Button type="primary" style={{float:'left',width:100,height:40,background:'#999999',border:0,fontSize:16}}>确定</Button>
+            <Button type="primary" style={{float:'left',marginLeft:40,width:100,height:40,background:'#eeeeee',border:0,fontSize:16}}>清空</Button>
           </div>
         </Col>
       </Row>

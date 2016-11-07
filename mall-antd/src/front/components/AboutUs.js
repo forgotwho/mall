@@ -29,7 +29,7 @@ const AboutUs = React.createClass({
           <div style={{marginTop:30,width:'100%'}}><img src="images/06.png" /></div>
           <div style={{marginTop:30,color:'#333333',fontSize:16}}>
             <p>优秀的设计打动您，让您的明眸打动更多身边的人。 </p> 
-            <p>不论是</p>
+            <p>无论是</p>
           </div>
         </Col>
       </Row>

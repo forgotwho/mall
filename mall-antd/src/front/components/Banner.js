@@ -16,9 +16,9 @@ const Banner = React.createClass({
           <div><img width="100%" src="images/01.png" /></div>
         </Carousel>
       </Col>
-      <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{}}>
+      <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{width:990,background:'#FFFFFF'}}>
         <Carousel autoplay dots="false">
-          <div><img width="100%" src="images/00.png" /></div>
+          <div><img width="100%" height="100%" src="images/00.png" /></div>
         </Carousel>
       </Col>
     </Row>

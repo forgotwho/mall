@@ -13,7 +13,7 @@ import Footer from './Footer.js';
 
 const ProductItem = withRouter(React.createClass({
   handleClick(){
-    this.props.router.push("/product/detail/1");
+    this.props.router.push("/product/detail/"+this.props.data.id);
   },
   render() {
   return (
@@ -26,9 +26,9 @@ const ProductItem = withRouter(React.createClass({
           <div style={{float:'left',marginLeft:10}}>
             <p style={{fontSize:28}}>{this.props.data.name}</p>
           </div>
-          <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
-            <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-            <div style={{float:'right',width:10,height:10,background:'black'}}></div>
+          <div style={{float:'right',width:60,marginRight:10,marginTop:5}}>
+            <div style={{float:'left',width:20,height:20,background:'red'}}></div>
+            <div style={{float:'right',width:20,height:20,background:'black'}}></div>
           </div>
         </div>
       </Card>
@@ -39,7 +39,7 @@ const ProductItem = withRouter(React.createClass({
 
 const ProductItem2 = withRouter(React.createClass({
   handleClick(){
-    this.props.router.push("/product/detail/1");
+    this.props.router.push("/product/detail/"+this.props.data.id);
   },
   render() {
   return (
@@ -79,19 +79,19 @@ const ProductList = React.createClass({
     <div>
       <Row type="flex" justify="center">
         <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990,background:'#eeeeee'}}>
-          <div style={{width:250,height:60,float:'left'}}>
-            <img height="100%" src={this.props.data.tag.image} />
+          <div style={{width:250,height:60,magin:0,float:'left'}}>
+            <img height="60" src={this.props.data.tag.image} />
           </div>
-          <div style={{height:60,marginRight:15,marginTop:10,float:'right'}}>
-            <p style={{fontSize:28,padding:0}}>more ></p>
+          <div style={{height:60,marginRight:15,paddingTop:10,float:'right'}}>
+            <p style={{fontSize:24,padding:0}}><a style={{color:'#666666'}} href={"#/product/tag/"+this.props.data.tag.name} >more ></a></p>
           </div>
         </Col>
         <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,background:'#eeeeee'}}>
           <div style={{width:250,height:40,float:'left'}}>
             <img height="100%" src={this.props.data.tag.image} />
           </div>
-          <div style={{height:40,marginRight:15,float:'right'}}>
-            <p style={{fontSize:24,padding:0}}>more ></p>
+          <div style={{height:40,marginRight:15,paddingTop:5,float:'right'}}>
+            <p style={{fontSize:16,padding:0}}><a style={{color:'#666666'}} href={"#/product/tag/"+this.props.data.tag.name} >more ></a></p>
           </div>
         </Col>
         <Line/>
@@ -119,7 +119,7 @@ var dataList1 = {
 };
 
 var dataList2 = {
-  tag:{name:"14.00mm",image:"images/02.png"},
+  tag:{name:"16.00mm",image:"images/02.png"},
   list:[
     {id: 11, name: "蓝山2", image: "images/21.png",clols:["red","black"]},
     {id: 12, name: "星河2", image: "images/22.png",clols:["red","black"]},
@@ -130,7 +130,7 @@ var dataList2 = {
 };
 
 var dataList3 = {
-  tag:{name:"14.00mm",image:"images/02.png"},
+  tag:{name:"18.00mm",image:"images/02.png"},
   list:[
     {id: 21, name: "蓝山3", image: "images/21.png",clols:["red","black"]},
     {id: 22, name: "星河3", image: "images/22.png",clols:["red","black"]},

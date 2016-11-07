@@ -75,13 +75,13 @@ const MenuBar = React.createClass({
       if(data.id==menuId){
         return (
         <div key={data.id} style={{float:'left',width:'20%',height:'100%',padding:8,background:"#999999"}}>
-          <a style={{fontSize:16,color:'#f7f7f7'}} href={data.href}>{data.name}</a>
+          <a style={{fontSize:16,color:'#f7f7f7'}} href={data.href} >{data.name}</a>
         </div>
       );
       }else{
         return (
         <div key={data.id} style={{float:'left',width:'20%',height:'100%',padding:8,background:"#f7f7f7"}}>
-          <a style={{fontSize:16,color:'#666666'}} href={data.href}>{data.name}</a>
+          <a style={{fontSize:16,color:'#666666'}} href={data.href} >{data.name}</a>
         </div>
       );
       }
