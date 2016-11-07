@@ -23,10 +23,10 @@ const ProductDetail = React.createClass({
           <div style={{float:'left',border:1}}>
             <img width="100%" src="images/10.png" />
             <div style={{marginLeft:60,marginRight:60,marginTop:10,marginBottom:10}}>
-              <img style={{padding:5}} src="images/21.png" />
-              <img style={{padding:5}} src="images/21.png" />
-              <img style={{padding:5}} src="images/21.png" />
-              <img style={{padding:5}} src="images/21.png" />
+              <img style={{padding:5,border:'1px solid #666666'}} src="images/21.png" />
+              <img style={{marginLeft:5,padding:5,border:'2px solid #666666'}} src="images/21.png" />
+              <img style={{marginLeft:5,padding:5,border:'1px solid #666666'}} src="images/21.png" />
+              <img style={{marginLeft:5,padding:5,border:'1px solid #666666'}} src="images/21.png" />
             </div>
           </div>
           <div style={{float:'left',marginLeft:20,marginTop:100,color:'#666666',fontSize:16}}>
