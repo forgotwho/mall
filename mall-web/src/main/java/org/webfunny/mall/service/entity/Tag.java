@@ -13,6 +13,9 @@ public class Tag {
 	private Long id;
 	private String name;//标签名称
 	private String picture;//标签图标
+	private String memo;//标签图标
+	private String recommend ;//是否推荐 1:推荐,0:默认
+	private Integer sortNum;//排序顺序
 	private Long parentId;//父标签Id
 
 	protected Tag() {
@@ -32,6 +35,24 @@ public class Tag {
 		this.picture = picture;
 		this.parentId = parentId;
 	}
+	
+	/** 
+	 * Creates a new instance of Tag. 
+	 * 
+	 * @param name
+	 * @param picture
+	 * @param memo
+	 * @param recommend
+	 * @param sortNum 
+	 */ 
+	public Tag(String name, String picture, String memo, String recommend, Integer sortNum) {
+		super();
+		this.name = name;
+		this.picture = picture;
+		this.memo = memo;
+		this.recommend = recommend;
+		this.sortNum = sortNum;
+	}
 
 	public Long getId() {
 		return id;
@@ -47,5 +68,17 @@ public class Tag {
 
 	public Long getParentId() {
 		return parentId;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public String getRecommend() {
+		return recommend;
+	}
+
+	public Integer getSortNum() {
+		return sortNum;
 	}
 }

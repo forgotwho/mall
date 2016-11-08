@@ -1,8 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Col, Row } from 'antd';
 import { Table} from 'antd';
 import { Button,Modal } from 'antd';
+import reqwest from 'reqwest';
+
+import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox } from 'antd';
+
+import {
+  InputNumber, Switch, Radio,
+  Slider, Upload,
+} from 'antd';
+const FormItem = Form.Item;
+const Option = Select.Option;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+
 import { withRouter } from 'react-router';
 
 var dataList = [
@@ -23,9 +35,9 @@ const columns = [{
   dataIndex: 'name',
 }, {
   title: '分类图标',
-  dataIndex: 'image',
+  dataIndex: 'picture',
   render: (text, record) => (
-    <img src={record.image} />
+    <img src={record.picture} />
   ),
 }, {
   title: '分类描述',
@@ -33,7 +45,10 @@ const columns = [{
 }, {
 }, {
   title: '推荐首页',
-  dataIndex: 'recomment',
+  dataIndex: 'recommend',
+  render: (text, record) => (
+    <span>{record.recommend=="1"?"是":"否"}</span>
+  ),
 }, {
   title: '显示排序',
   dataIndex: 'sortNum',
@@ -101,16 +116,221 @@ const AddView = React.createClass({
             </Button>,
           ]}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+           <RegistrationForm/>
         </Modal>
       </div>
     );
   },
 });
+
+const TableList = React.createClass({
+  getInitialState() {
+    return {
+      data: [],
+      pagination: {},
+      loading: false,
+    };
+  },
+  handleTableChange(pagination, filters, sorter) {
+    const pager = this.state.pagination;
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    this.fetch({
+      results: pagination.pageSize,
+      page: pagination.current,
+      sortField: sorter.field,
+      sortOrder: sorter.order,
+      ...filters,
+    });
+  },
+  fetch(params = {}) {
+    console.log('params:', params);
+    this.setState({ loading: true });
+     $.get('/api/tag',{recommend:"0"},function(data){
+			const pagination = this.state.pagination;
+      pagination.total = 200;
+      this.setState({
+        loading: false,
+        data: data,
+        pagination,
+      });
+		 }.bind(this));
+  },
+  componentDidMount() {
+    this.fetch();
+  },
+  render() {
+    return (
+      <Table columns={columns}
+        rowKey={record => record.registered}
+        dataSource={this.state.data}
+        pagination={this.state.pagination}
+        loading={this.state.loading}
+        onChange={this.handleTableChange}
+      />
+    );
+  },
+});
+
+const residences = [{
+  value: 'zhejiang',
+  label: 'Zhejiang',
+  children: [{
+    value: 'hangzhou',
+    label: 'Hangzhou',
+    children: [{
+      value: 'xihu',
+      label: 'West Lake',
+    }],
+  }],
+}, {
+  value: 'jiangsu',
+  label: 'Jiangsu',
+  children: [{
+    value: 'nanjing',
+    label: 'Nanjing',
+    children: [{
+      value: 'zhonghuamen',
+      label: 'Zhong Hua Men',
+    }],
+  }],
+}];
+
+const RegistrationForm = Form.create()(React.createClass({
+  getInitialState() {
+    return {
+      passwordDirty: false,
+    };
+  },
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        $.post('/api/tag',values,function(data){
+		    }.bind(this));
+      }
+    });
+  },
+  handlePasswordBlur(e) {
+    const value = e.target.value;
+    this.setState({ passwordDirty: this.state.passwordDirty || !!value });
+  },
+  checkPassowrd(rule, value, callback) {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('Two passwords that you enter is inconsistent!');
+    } else {
+      callback();
+    }
+  },
+  checkConfirm(rule, value, callback) {
+    const form = this.props.form;
+    if (value && this.state.passwordDirty) {
+      form.validateFields(['confirm'], { force: true });
+    }
+    callback();
+  },
+  recommendChange(e){
+    const form = this.props.form;
+    form.recommend = "1";
+  },
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 14 },
+    };
+    const tailFormItemLayout = {
+      wrapperCol: {
+        span: 14,
+        offset: 6,
+      },
+    };
+    const prefixSelector = getFieldDecorator('prefix', {
+      initialValue: '86',
+    })(
+      <Select className="icp-selector">
+        <Option value="86">+86</Option>
+      </Select>
+    );
+    return (
+      <Form horizontal onSubmit={this.handleSubmit}>
+        <FormItem
+          {...formItemLayout}
+          label="分类名称"
+          hasFeedback
+        >
+          {getFieldDecorator('name', {
+            rules: [{
+              required: true, message: 'Please input your E-mail!',
+            }],
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="分类图标"
+          hasFeedback
+        >
+          {getFieldDecorator('picture', {
+            rules: [{
+              required: true, message: 'Please input your password!',
+            }],
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="分类描述"
+          hasFeedback
+        >
+          {getFieldDecorator('memo', {
+            rules: [{
+              required: true, message: 'Please confirm your password!',
+            }],
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="首页推荐"
+          hasFeedback
+        >
+          {getFieldDecorator('recommend', {
+            rules: [],
+          })(
+            <div>
+              <Input  type="hidden"/>
+              <Switch onChange={this.recommendChange}/>
+            </div>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="显示顺序"
+          hasFeedback
+        >
+          {getFieldDecorator('sortNum', {
+            rules: [{
+              required: true, message: 'Please confirm your password!',
+            }],
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit" size="large">保存</Button>
+        </FormItem>
+      </Form>
+    );
+  },
+}));
 
 const ProductPage = React.createClass({
   render() {
@@ -123,7 +343,7 @@ const ProductPage = React.createClass({
       </Row>
       <Row>
         <Col>
-          <Table columns={columns} dataSource={dataList} pagination={pagination} />
+          <TableList />
         </Col>
       </Row>
     </div>
