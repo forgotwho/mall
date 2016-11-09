@@ -13,7 +13,7 @@ export default function() {
     return (
         <Router history={ hashHistory }>
             <Route path="/" component={FramePage}>
-              <IndexRoute component={ ProductPage } />
+              <IndexRoute component={ TagPage } />
               <Route path="tag" component="div">
 					       <IndexRoute component={ TagPage } />
 					       <Route path="*" component={ PageNotFound } />
