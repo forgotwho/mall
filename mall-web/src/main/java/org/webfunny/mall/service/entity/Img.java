@@ -13,7 +13,7 @@ public class Img {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column 
+	@Column(length=102400) 
 	private String imgData;//标签名称
 
 	protected Img() {

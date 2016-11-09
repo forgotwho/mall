@@ -38,7 +38,7 @@ public class TagController {
 		return tag;
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "add",method = RequestMethod.POST)
 	public boolean add(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "picture", required = false) String picture,
 			@RequestParam(value = "memo", required = false) String memo,
@@ -53,7 +53,7 @@ public class TagController {
 		return false;
 	}
 
-	@RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+	@RequestMapping(value = "edit/{id}",method = RequestMethod.POST)
 	public boolean edit(@PathVariable Long id,@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "picture", required = false) String picture,
 			@RequestParam(value = "memo", required = false) String memo,
@@ -68,7 +68,7 @@ public class TagController {
 		return false;
 	}
 
-	@RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
+	@RequestMapping(value = "delete/{id}",method = RequestMethod.POST)
 	public boolean delete(@PathVariable Long id) {
 		tagRepository.delete(id);
 		return true;
