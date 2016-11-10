@@ -1,5 +1,6 @@
 package org.webfunny.mall.service.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class Tag {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;//标签名称
+	@Column(length=102400)
 	private String picture;//标签图标
 	private String memo;//标签图标
 	private String recommend ;//是否推荐 1:推荐,0:默认

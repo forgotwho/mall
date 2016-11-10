@@ -12,6 +12,46 @@ const RadioGroup = Radio.Group;
 import reqwest from 'reqwest';
 import { withRouter } from 'react-router';
 
+const ImageUploadList = React.createClass({
+  getInitialState() {
+    return {
+      previewVisible: false,
+      previewImage: '',
+    };
+  },
+  handleCancel() {
+    this.setState({
+      previewVisible: false,
+    });
+  },
+  render() {
+    const props = {
+      name:'file',
+      action: '/api/img',
+      listType: 'picture-card',
+      defaultFileList: [],
+      multiple: false,
+      onPreview: (file) => {
+        this.setState({
+          previewImage: file.url,
+          previewVisible: true,
+        });
+      },
+    };
+    return (
+      <div className="clearfix">
+        <Upload {...props}>
+          <Icon type="plus" />
+          <div className="ant-upload-text">选择</div>
+        </Upload>
+        <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel}>
+          <img alt="example" src={this.state.previewImage} />
+        </Modal>
+      </div>
+    );
+  },
+});
+
 const AddView = withRouter(React.createClass({
   getInitialState() {
     return {
@@ -26,17 +66,11 @@ const AddView = withRouter(React.createClass({
     });
   },
   handleSubmit(param) {
-    this.setState({ param: param });
-    this.handleOk();
-  },
-  handleOk() {
-    this.setState({ loading: true });
-    setTimeout(() => {
-    $.post('/api/tag/add',this.state.param,function(data){
-		}.bind(this));
+    var datas = {name:param.name,picture:param.picture[0].thumbUrl,memo:param.memo,recommend:param.recommend,sortNum:param.sortNum};
+    $.post('/api/tag/add',datas,function(data){
       this.setState({ loading: false, visible: false });
-      this.props.router.push("/tag");
-    }, 1000);
+      this.props.reload();
+		}.bind(this));
   },
   handleCancel() {
     this.setState({ visible: false });
@@ -100,6 +134,12 @@ const AddForm = Form.create()(React.createClass({
     const form = this.props.form;
     form.recommend = "1";
   },
+  normFile(e) {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  },
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -110,6 +150,22 @@ const AddForm = Form.create()(React.createClass({
       wrapperCol: {
         span: 14,
         offset: 6,
+      },
+    };
+    const uploadProps = {
+      name:'file',
+      action: '/api/img',
+      listType: 'picture',
+      defaultFileList: [],
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
       },
     };
     return (
@@ -130,15 +186,14 @@ const AddForm = Form.create()(React.createClass({
         <FormItem
           {...formItemLayout}
           label="分类图标"
-          hasFeedback
         >
           {getFieldDecorator('picture', {
-            rules: [{
-            }],
+            valuePropName: 'fileList',
+            normalize: this.normFile,
           })(
-            <Upload {...formProps}>
+            <Upload name="file" action="/api/img" listType="picture" onChange={this.handleUpload}>
               <Button type="ghost">
-                <Icon type="upload" /> Click to Upload
+                <Icon type="upload" /> Click to upload
               </Button>
             </Upload>
           )}
@@ -192,48 +247,7 @@ const AddForm = Form.create()(React.createClass({
   },
 }));
 
-const columns = [{
-  title: '分类编码',
-  dataIndex: 'id',
-  render(text) {
-    return <a href="#">{text}</a>;
-  },
-}, {
-  title: '分类名称',
-  dataIndex: 'name',
-}, {
-  title: '分类图标',
-  dataIndex: 'picture',
-  render: (text, record) => (
-    <img src={record.picture} />
-  ),
-}, {
-  title: '分类描述',
-  dataIndex: 'memo',
-}, {
-  title: '推荐首页',
-  dataIndex: 'recommend',
-  render: (text, record) => (
-    <span>{record.recommend=="1"?"是":"否"}</span>
-  ),
-}, {
-  title: '显示排序',
-  dataIndex: 'sortNum',
-}, {
-  title: '操作',
-  key: 'action',
-  render: (text, record) => (
-    <span>
-      <a href={"#/tag/detail/"+record.id}>详情</a>
-      <span className="ant-divider" />
-      <a href={"#/tag/edit/"+record.id}>编辑</a>
-      <span className="ant-divider" />
-      <a href="#">删除</a>
-    </span>
-  ),
-}];
-
-const TableList = React.createClass({
+const TagPage = React.createClass({
   getInitialState() {
     return {
       data: [],
@@ -249,23 +263,59 @@ const TableList = React.createClass({
   componentDidMount() {
     this.fetch();
   },
-  render() {
-    return (
-      <Table columns={columns}
-        dataSource={this.state.data}
-      />
-    );
+  deleteTag(event){
+    var id = event.target.id;
+    $.post('/api/tag/delete/'+id,function(data){
+		  this.fetch();
+		 }.bind(this));
   },
-});
-
-const TagPage = React.createClass({
   render() {
+    const columns = [{
+      title: '分类编码',
+      dataIndex: 'id',
+      render(text) {
+        return <a href="#">{text}</a>;
+      },
+    }, {
+      title: '分类名称',
+      dataIndex: 'name',
+    }, {
+      title: '分类图标',
+      dataIndex: 'picture',
+      render: (text, record) => (
+        <img src={record.picture} />
+      ),
+    }, {
+      title: '分类描述',
+      dataIndex: 'memo',
+    }, {
+      title: '推荐首页',
+      dataIndex: 'recommend',
+      render: (text, record) => (
+        <span>{record.recommend=="1"?"是":"否"}</span>
+      ),
+    }, {
+      title: '显示排序',
+      dataIndex: 'sortNum',
+    }, {
+      title: '操作',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <a href={"#/tag/detail/"+record.id}>详情</a>
+          <span className="ant-divider" />
+          <a href={"#/tag/edit/"+record.id}>编辑</a>
+          <span className="ant-divider" />
+          <a href="#/tag" id={record.id} onClick={this.deleteTag}>删除</a>
+        </span>
+      ),
+    }];
   return (
     <div>
       <Row>
         <Col>
-          <AddView />
-          <TableList/>
+          <AddView reload={this.fetch}/>
+          <Table columns={columns} dataSource={this.state.data} />
         </Col>
       </Row>
     </div>
