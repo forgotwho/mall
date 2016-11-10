@@ -38,6 +38,17 @@ public class Tag {
 		this.parentId = parentId;
 	}
 	
+	public Tag(Long id, String name, String picture, String memo, String recommend, Integer sortNum, Long parentId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.picture = picture;
+		this.memo = memo;
+		this.recommend = recommend;
+		this.sortNum = sortNum;
+		this.parentId = parentId;
+	}
+
 	/** 
 	 * Creates a new instance of Tag. 
 	 * 

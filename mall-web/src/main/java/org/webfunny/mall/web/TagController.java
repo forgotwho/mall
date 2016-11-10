@@ -25,7 +25,7 @@ public class TagController {
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Tag> list(@RequestParam(value = "recommend", required = false) String recommend,HttpServletResponse response) {
 		List<Tag> tagList = new ArrayList<Tag>();
-		Iterable<Tag> it = tagRepository.findByRecommend(recommend);
+		Iterable<Tag> it = tagRepository.findAll();
 		for(Iterator<Tag> iterator = it.iterator();iterator.hasNext();){
 			tagList.add(iterator.next());
 		}
@@ -60,7 +60,7 @@ public class TagController {
 			@RequestParam(value = "recommend", required = false) String recommend,
 			@RequestParam(value = "sortNum", required = false) Integer sortNum,
 			@RequestParam(value = "parentId", required = false) Long parentId) {
-		Tag tag = new Tag(id,name, picture, parentId);
+		Tag tag = new Tag(id, name, picture, memo, recommend, sortNum, parentId);
 		tag = tagRepository.save(tag);
 		if(tag!=null&&tag.getId()!=id){
 			return true;

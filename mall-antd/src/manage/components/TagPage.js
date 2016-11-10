@@ -12,46 +12,6 @@ const RadioGroup = Radio.Group;
 import reqwest from 'reqwest';
 import { withRouter } from 'react-router';
 
-const ImageUploadList = React.createClass({
-  getInitialState() {
-    return {
-      previewVisible: false,
-      previewImage: '',
-    };
-  },
-  handleCancel() {
-    this.setState({
-      previewVisible: false,
-    });
-  },
-  render() {
-    const props = {
-      name:'file',
-      action: '/api/img',
-      listType: 'picture-card',
-      defaultFileList: [],
-      multiple: false,
-      onPreview: (file) => {
-        this.setState({
-          previewImage: file.url,
-          previewVisible: true,
-        });
-      },
-    };
-    return (
-      <div className="clearfix">
-        <Upload {...props}>
-          <Icon type="plus" />
-          <div className="ant-upload-text">选择</div>
-        </Upload>
-        <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel}>
-          <img alt="example" src={this.state.previewImage} />
-        </Modal>
-      </div>
-    );
-  },
-});
-
 const AddView = withRouter(React.createClass({
   getInitialState() {
     return {
@@ -65,8 +25,8 @@ const AddView = withRouter(React.createClass({
       param:{},
     });
   },
-  handleSubmit(param) {
-    var datas = {name:param.name,picture:param.picture[0].thumbUrl,memo:param.memo,recommend:param.recommend,sortNum:param.sortNum};
+  handleSubmit(param,recommend) {
+    var datas = {name:param.name,picture:param.picture[0].thumbUrl,memo:param.memo,recommend:recommend,sortNum:param.sortNum};
     $.post('/api/tag/add',datas,function(data){
       this.setState({ loading: false, visible: false });
       this.props.reload();
@@ -117,22 +77,27 @@ const formProps = {
 const AddForm = Form.create()(React.createClass({
   getInitialState() {
     return {
+      recommend:'0'
     };
   },
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.submit(values);
+        this.props.submit(values,this.state.recommend);
       //   $.post('/api/tag/add',values,function(data){
           
 		    // }.bind(this));
       }
     });
   },
-  recommendChange(e){
+  recommendChange(checked){
     const form = this.props.form;
-    form.recommend = "1";
+    if(checked){
+      this.setState({recommend:"1"});
+    }else{
+      this.setState({recommend:"0"});
+    }
   },
   normFile(e) {
     if (Array.isArray(e)) {
@@ -247,10 +212,158 @@ const AddForm = Form.create()(React.createClass({
   },
 }));
 
+const EditForm = Form.create()(React.createClass({
+  getInitialState() {
+    return {
+      data:{},
+      recommend:'0'
+    };
+  },
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.props.submit(values,this.state.recommend);
+      //   $.post('/api/tag/add',values,function(data){
+          
+		    // }.bind(this));
+      }
+    });
+  },
+  recommendChange(checked){
+    const form = this.props.form;
+    if(checked){
+      this.setState({recommend:"1"});
+    }else{
+      this.setState({recommend:"0"});
+    }
+  },
+  normFile(e) {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  },
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 14 },
+    };
+    const tailFormItemLayout = {
+      wrapperCol: {
+        span: 14,
+        offset: 6,
+      },
+    };
+    const uploadProps = {
+      name:'file',
+      action: '/api/img',
+      listType: 'picture',
+      defaultFileList: [
+      ],
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+    };
+    return (
+      <Form horizontal onSubmit={this.handleSubmit}>
+        <FormItem
+          {...formItemLayout}
+          label="分类名称"
+          hasFeedback
+        >
+          {getFieldDecorator('name', {
+            rules: [{
+              required: true, message: '请输入分类名称!',
+            }],
+            initialValue:this.props.data.name
+          })(
+            <Input />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="分类图标"
+        >
+          {getFieldDecorator('picture', {
+            valuePropName: 'fileList',
+            normalize: this.normFile
+          })(
+            <Upload name="file" action="/api/img" listType="picture" onChange={this.handleUpload}>
+              <Button type="ghost">
+                <Icon type="upload" /> Click to upload
+              </Button>
+            </Upload>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="分类描述"
+          hasFeedback
+        >
+          {getFieldDecorator('memo', {
+            rules: [{
+              required: true, message: '请输入分类描述!',
+            }],
+            initialValue:this.props.data.memo
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="首页推荐"
+          hasFeedback
+        >
+          {getFieldDecorator('recommend', {
+            rules: [],
+            initialValue:this.props.data.recommend
+          })(
+            <div>
+              <Input  type="hidden"/>
+              <Switch defaultChecked={this.props.data.recommend=='1'?true:false} onChange={this.recommendChange}/>
+            </div>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="显示顺序"
+          hasFeedback
+        >
+          {getFieldDecorator('sortNum', {
+            rules: [{type: 'number',
+              required: true, message: '请输入显示顺序!',
+            }],
+            initialValue:this.props.data.sortNum
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem {...tailFormItemLayout}>
+          <Button key="back" type="ghost" size="large" onClick={this.props.cancel}>返回</Button>,
+          <Button type="primary" htmlType="submit" size="large">保存</Button>
+        </FormItem>
+      </Form>
+    );
+  },
+}));
+
 const TagPage = React.createClass({
   getInitialState() {
     return {
       data: [],
+      loading:false,
+      showEdit:false,
+      defaultData:{},
+      editData:{}
     };
   },
   fetch(params = {}) {
@@ -262,6 +375,25 @@ const TagPage = React.createClass({
   },
   componentDidMount() {
     this.fetch();
+  },
+  editTag(event){
+    var id = event.target.id;
+    $.get('/api/tag/'+id,function(data){
+      this.setState({showEdit:true,defaultData:id,editData:data});
+		 }.bind(this));
+  },
+  handleSubmit(param,recommend) {
+    var datas = {name:param.name,picture:this.state.editData.picture,memo:param.memo,recommend:recommend,sortNum:param.sortNum};
+    if(param.picture){
+      datas = {name:param.name,picture:param.picture[0].thumbUrl,memo:param.memo,recommend:recommend,sortNum:param.sortNum};
+    }
+    $.post('/api/tag/edit/'+this.state.defaultData,datas,function(data){
+      this.setState({ loading: false, showEdit: false });
+      this.fetch();
+		}.bind(this));
+  },
+  handleCancel() {
+    this.setState({ showEdit: false });
   },
   deleteTag(event){
     var id = event.target.id;
@@ -304,7 +436,7 @@ const TagPage = React.createClass({
         <span>
           <a href={"#/tag/detail/"+record.id}>详情</a>
           <span className="ant-divider" />
-          <a href={"#/tag/edit/"+record.id}>编辑</a>
+          <a id={record.id} onClick={this.editTag}>编辑</a>
           <span className="ant-divider" />
           <a href="#/tag" id={record.id} onClick={this.deleteTag}>删除</a>
         </span>
@@ -315,6 +447,16 @@ const TagPage = React.createClass({
       <Row>
         <Col>
           <AddView reload={this.fetch}/>
+          <Modal
+            visible={this.state.showEdit}
+            title="修改分类"
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            footer={[
+            ]}
+          >
+             <EditForm tagId={this.state.defaultData} data={this.state.editData} submit={this.handleSubmit} cancel={this.handleCancel}/>
+          </Modal>
           <Table columns={columns} dataSource={this.state.data} />
         </Col>
       </Row>
