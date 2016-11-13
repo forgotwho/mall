@@ -16,6 +16,8 @@ public class ProductTag {
 
 	protected ProductTag() {
 	}
+	
+	
 
 	public ProductTag(Long productId, Long tagId) {
 		super();

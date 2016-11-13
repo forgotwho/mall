@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,10 +24,16 @@ public class TagController {
 	private TagRepository tagRepository;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Tag> list(@RequestParam(value = "recommend", required = false) String recommend,HttpServletResponse response) {
+	public List<Tag> list(@RequestParam(value = "recommend", required = false) String recommend,
+			HttpServletResponse response) {
 		List<Tag> tagList = new ArrayList<Tag>();
-		Iterable<Tag> it = tagRepository.findAll();
-		for(Iterator<Tag> iterator = it.iterator();iterator.hasNext();){
+		Iterable<Tag> it = null;
+		if (StringUtils.isEmpty(recommend)) {
+			it = tagRepository.findAll();
+		} else {
+			it = tagRepository.findByRecommend(recommend);
+		}
+		for (Iterator<Tag> iterator = it.iterator(); iterator.hasNext();) {
 			tagList.add(iterator.next());
 		}
 		return tagList;
@@ -38,37 +45,38 @@ public class TagController {
 		return tag;
 	}
 
-	@RequestMapping(value = "add",method = RequestMethod.POST)
+	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public boolean add(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "picture", required = false) String picture,
+			@RequestParam(value = "color", required = false) String color,
 			@RequestParam(value = "memo", required = false) String memo,
-			@RequestParam(value = "recommend", required = false,defaultValue="0") String recommend,
-			@RequestParam(value = "sortNum", required = false,defaultValue="10") Integer sortNum,
-			@RequestParam(value = "parentId", required = false) Long parentId) {
-		Tag tag = new Tag(name, picture, memo, recommend, sortNum);
+			@RequestParam(value = "recommend", required = false, defaultValue = "false") Boolean recommend,
+			@RequestParam(value = "sortNum", required = false, defaultValue = "10") Integer sortNum) {
+		Tag tag = new Tag(name, picture,color, memo, recommend, sortNum);
 		tag = tagRepository.save(tag);
-		if(tag!=null&&tag.getId()!=null){
+		if (tag != null && tag.getId() != null) {
 			return true;
 		}
 		return false;
 	}
 
-	@RequestMapping(value = "edit/{id}",method = RequestMethod.POST)
-	public boolean edit(@PathVariable Long id,@RequestParam(value = "name", required = true) String name,
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.POST)
+	public boolean edit(@PathVariable Long id, @RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "picture", required = false) String picture,
+			@RequestParam(value = "color", required = false) String color,
 			@RequestParam(value = "memo", required = false) String memo,
-			@RequestParam(value = "recommend", required = false) String recommend,
-			@RequestParam(value = "sortNum", required = false) Integer sortNum,
-			@RequestParam(value = "parentId", required = false) Long parentId) {
-		Tag tag = new Tag(id, name, picture, memo, recommend, sortNum, parentId);
+			@RequestParam(value = "recommend", required = false) Boolean recommend,
+			@RequestParam(value = "sortNum", required = false) Integer sortNum) {
+		Tag tag = new Tag(name, picture,color, memo, recommend, sortNum);
+		tag.setId(id);
 		tag = tagRepository.save(tag);
-		if(tag!=null&&tag.getId()!=id){
+		if (tag != null && tag.getId() == id) {
 			return true;
 		}
 		return false;
 	}
 
-	@RequestMapping(value = "delete/{id}",method = RequestMethod.POST)
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.POST)
 	public boolean delete(@PathVariable Long id) {
 		tagRepository.delete(id);
 		return true;

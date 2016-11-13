@@ -9,18 +9,19 @@ import org.webfunny.mall.service.entity.User;
 import org.webfunny.mall.service.repository.UserRepository;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @RequestMapping(value="/login",method = RequestMethod.POST)
-    public String login(@RequestParam(value="username") String username,@RequestParam(value="password") String password) {
-    	User user = userRepository.findByUsernameAndPassword(username, password);
-    	if(user!=null){
-    		return user.getUsername();
-    	}
-    	return null;
-    }
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String login(@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password) {
+		User user = userRepository.findByUsernameAndPassword(username, password);
+		if (user != null) {
+			return user.getUsername();
+		}
+		return null;
+	}
 }

@@ -26,7 +26,7 @@ const AddView = withRouter(React.createClass({
     });
   },
   handleSubmit(param) {
-    $.post('/api/tag/add',param,function(data){
+    $.post('/api/banner/add',param,function(data){
       this.setState({ loading: false, visible: false });
       this.props.reload();
 		}.bind(this));
@@ -38,12 +38,12 @@ const AddView = withRouter(React.createClass({
     return (
       <div>
         <Button type="primary" style={{marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.showModal}>
-          新增分类
+          新增轮播
         </Button>
         <Modal
           maskClosable={false}
           visible={this.state.visible}
-          title="新增分类"
+          title="新增轮播"
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
@@ -144,12 +144,12 @@ const AddForm = Form.create({
       <Form horizontal onSubmit={this.handleSubmit}>
         <FormItem
           {...formItemLayout}
-          label="分类名称"
+          label="轮播名称"
           hasFeedback
         >
           {getFieldDecorator('name', {
             rules: [{
-              required: true, message: '请输入分类名称!',
+              required: true, message: '请输入轮播名称!',
             }],
           })(
             <Input  />
@@ -157,7 +157,7 @@ const AddForm = Form.create({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="分类图标"
+          label="轮播图片"
         >
           {getFieldDecorator('picture', {
             valuePropName: 'fileList',
@@ -172,25 +172,12 @@ const AddForm = Form.create({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="分类背景"
-          hasFeedback
-        >
-          {getFieldDecorator('color', {
-            rules: [{
-              required: true, message: '请输入分类背景!',
-            }],
-          })(
-            <Input  />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="分类描述"
+          label="轮播描述"
           hasFeedback
         >
           {getFieldDecorator('memo', {
             rules: [{
-              required: true, message: '请输入分类描述!',
+              required: true, message: '请输入轮播描述!',
             }],
           })(
             <Input  />
@@ -198,7 +185,33 @@ const AddForm = Form.create({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="首页推荐"
+          label="轮播链接"
+          hasFeedback
+        >
+          {getFieldDecorator('link', {
+            rules: [{
+              required: true, message: '请输入轮播链接!',
+            }],
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="轮播背景"
+          hasFeedback
+        >
+          {getFieldDecorator('color', {
+            rules: [{
+              required: true, message: '请输入轮播背景!',
+            }],
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="是否显示"
           hasFeedback
         >
           {getFieldDecorator('recommend', {
@@ -209,6 +222,24 @@ const AddForm = Form.create({
             <div>
               <Switch onChange={this.handleChange}/>
             </div>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="显示位置"
+          hasFeedback
+        >
+          {getFieldDecorator('source', {
+            rules: [{
+              required: true, message: '请输入显示位置!',
+            }],
+            initialValue:'00'
+          })(
+          <Select size="large">
+            <Option value="00">通用</Option>
+            <Option value="01">电脑</Option>
+            <Option value="02">手机</Option>
+          </Select>
           )}
         </FormItem>
         <FormItem
@@ -321,12 +352,12 @@ const EditForm = Form.create({
       <Form horizontal onSubmit={this.handleSubmit}>
         <FormItem
           {...formItemLayout}
-          label="分类名称"
+          label="轮播名称"
           hasFeedback
         >
           {getFieldDecorator('name', {
             rules: [{
-              required: true, message: '请输入分类名称!',
+              required: true, message: '请输入轮播名称!',
             }],
             initialValue:this.props.data.name
           })(
@@ -335,7 +366,7 @@ const EditForm = Form.create({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="分类图标"
+          label="轮播图片"
         >
           {getFieldDecorator('picture', {
             valuePropName: 'fileList',
@@ -356,26 +387,12 @@ const EditForm = Form.create({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="分类背景"
-          hasFeedback
-        >
-          {getFieldDecorator('color', {
-            rules: [{
-              required: true, message: '请输入分类背景!',
-            }],
-            initialValue:this.props.data.color
-          })(
-            <Input  />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="分类描述"
+          label="轮播描述"
           hasFeedback
         >
           {getFieldDecorator('memo', {
             rules: [{
-              required: true, message: '请输入分类描述!',
+              required: true, message: '请输入轮播描述!',
             }],
             initialValue:this.props.data.memo
           })(
@@ -384,7 +401,35 @@ const EditForm = Form.create({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="首页推荐"
+          label="轮播背景"
+          hasFeedback
+        >
+          {getFieldDecorator('color', {
+            rules: [{
+              required: true, message: '请输入轮播背景!',
+            }],
+            initialValue:this.props.data.color
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="轮播链接"
+          hasFeedback
+        >
+          {getFieldDecorator('link', {
+            rules: [{
+              required: true, message: '请输入轮播链接!',
+            }],
+            initialValue:this.props.data.link
+          })(
+            <Input  />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="是否显示"
           hasFeedback
         >
           {getFieldDecorator('recommend', {
@@ -392,6 +437,23 @@ const EditForm = Form.create({
           initialValue:this.props.data.recommend
           })(
               <Switch onChange={this.handleChange}/>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="显示位置"
+          hasFeedback
+        >
+          {getFieldDecorator('source', {
+            rules: [{required: true, message: '请输入显示位置!',
+            }],
+            initialValue:this.props.data.source
+          })(
+            <Select size="large">
+              <Option value="00">通用</Option>
+              <Option value="01">电脑</Option>
+              <Option value="02">手机</Option>
+            </Select>
           )}
         </FormItem>
         <FormItem
@@ -416,7 +478,7 @@ const EditForm = Form.create({
   },
 }));
 
-const TagPage = React.createClass({
+const BannerPage = React.createClass({
   getInitialState() {
     return {
       data: [],
@@ -427,21 +489,21 @@ const TagPage = React.createClass({
     };
   },
   fetch(params = {}) {
-     $.get('/api/tag',function(data){
+     $.get('/api/banner',function(data){
       this.setState({data: data,showEdit:false});
 		 }.bind(this));
   },
   componentDidMount() {
     this.fetch();
   },
-  editTag(event){
+  editbanner(event){
     var id = event.target.id;
-    $.get('/api/tag/'+id,function(data){
+    $.get('/api/banner/'+id,function(data){
       this.setState({showEdit:true,defaultData:id,editData:data});
 		 }.bind(this));
   },
   handleSubmit(param) {
-    $.post('/api/tag/edit/'+this.state.defaultData,param,function(data){
+    $.post('/api/banner/edit/'+this.state.defaultData,param,function(data){
       this.setState({ loading: false, showEdit: false });
       this.fetch();
 		}.bind(this));
@@ -449,42 +511,51 @@ const TagPage = React.createClass({
   handleCancel() {
     this.setState({ showEdit: false });
   },
-  deleteTag(event){
+  deletebanner(event){
     var id = event.target.id;
-    $.post('/api/tag/delete/'+id,function(data){
+    $.post('/api/banner/delete/'+id,function(data){
 		  this.fetch();
 		 }.bind(this));
   },
   render() {
     const columns = [{
-      title: '分类编码',
+      title: '轮播编码',
       dataIndex: 'id',
       render(text) {
         return <a href="#">{text}</a>;
       },
     }, {
-      title: '分类名称',
+      title: '轮播名称',
       dataIndex: 'name',
     }, {
-      title: '分类图标',
+      title: '轮播图片',
       dataIndex: 'picture',
       render: (text, record) => (
-        <img width="250" height="40" src={"/api/img/thumb/"+record.picture} />
+        <img width="200" src={"/api/img/thumb/"+record.picture} />
       ),
     }, {
-      title: '分类背景',
+      title: '轮播描述',
+      dataIndex: 'memo',
+    }, {
+      title: '轮播背景',
       dataIndex: 'color',
       render: (text, record) => (
         <div key={record.color} style={{marginLeft:5,float:'left',width:10,height:10,background:record.color}}></div>
       ),
     }, {
-      title: '分类描述',
-      dataIndex: 'memo',
+      title: '轮播链接',
+      dataIndex: 'link',
     }, {
-      title: '推荐首页',
+      title: '是否显示',
       dataIndex: 'recommend',
       render: (text, record) => (
         <span>{record.recommend==true?"是":"否"}</span>
+      ),
+    }, {
+      title: '显示位置',
+      dataIndex: 'source',
+      render: (text, record) => (
+        <span>{record.source=="00"?"通用":(record.source=="01"?"电脑":"手机")}</span>
       ),
     }, {
       title: '显示排序',
@@ -494,11 +565,11 @@ const TagPage = React.createClass({
       key: 'action',
       render: (text, record) => (
         <span>
-          <Link to={"/tag/detail/"+record.id}>详情</Link>
+          <Link to={"/banner/detail/"+record.id}>详情</Link>
           <span className="ant-divider" />
-          <Link id={record.id} onClick={this.editTag}>编辑</Link>
+          <Link id={record.id} onClick={this.editbanner}>编辑</Link>
           <span className="ant-divider" />
-          <Link id={record.id} onClick={this.deleteTag}>删除</Link>
+          <Link id={record.id} onClick={this.deletebanner}>删除</Link>
         </span>
       ),
     }];
@@ -510,13 +581,13 @@ const TagPage = React.createClass({
           <Modal
             maskClosable={false}
             visible={this.state.showEdit}
-            title="修改分类"
+            title="修改轮播"
             onOk={this.handleOk}
             onCancel={this.handleCancel}
             footer={[
             ]}
           >
-             <EditForm tagId={this.state.defaultData} data={this.state.editData} submit={this.handleSubmit} cancel={this.handleCancel}/>
+             <EditForm bannerId={this.state.defaultData} data={this.state.editData} submit={this.handleSubmit} cancel={this.handleCancel}/>
           </Modal>
           <Table columns={columns} dataSource={this.state.data} />
         </Col>
@@ -526,4 +597,4 @@ const TagPage = React.createClass({
   }
 });
 
-export default withRouter(TagPage);
+export default withRouter(BannerPage);

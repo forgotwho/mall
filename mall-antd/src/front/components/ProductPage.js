@@ -15,19 +15,25 @@ const ProductItem = withRouter(React.createClass({
     this.props.router.push("/product/detail/"+this.props.data.id);
   },
   render() {
+    var colorList = [];
+    if(this.props.data.colors!=null){
+      var color = this.props.data.colors.split(","); 
+      for(var i=0;i<color.length;i++){
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',width:20,height:20,background:color[i]}}></div>);
+      }
+    }
   return (
     <div>
       <Card style={{float:'left',width:'50%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
         <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
-          <img width="100%" height="100%" src={this.props.data.image} />
+          <img width="100%" height="100%" src={"/api/img/thumb/"+this.props.data.picture} />
         </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
             <p style={{fontSize:28}}>{this.props.data.name}</p>
           </div>
           <div style={{float:'right',width:60,marginRight:10,marginTop:5}}>
-            <div style={{float:'left',width:20,height:20,background:'red'}}></div>
-            <div style={{float:'right',width:20,height:20,background:'black'}}></div>
+            {colorList}
           </div>
         </div>
       </Card>
@@ -41,19 +47,25 @@ const ProductItem2 = withRouter(React.createClass({
     this.props.router.push("/product/detail/"+this.props.data.id);
   },
   render() {
+    var colorList = [];
+    if(this.props.data.colors!=null){
+      var color = this.props.data.colors.split(","); 
+      for(var i=0;i<color.length;i++){
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',width:10,height:10,background:color[i]}}></div>);
+      }
+    }
   return (
     <div>
       <Card style={{float:'left',width:'20%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
         <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
-          <img width="100%" height="100%" src={this.props.data.image} />
+          <img width="100%" height="100%" src={"/api/img/thumb/"+this.props.data.picture} />
         </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
             <p style={{fontSize:16}}>{this.props.data.name}</p>
           </div>
           <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
-            <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-            <div style={{float:'right',width:10,height:10,background:'black'}}></div>
+            {colorList}
           </div>
         </div>
       </Card>
@@ -85,12 +97,12 @@ var dataList1 = {
 
 const ProductList = withRouter(React.createClass({
   render() {
-    var itemList = this.props.data.list.map(function(data) {
+    var itemList = this.props.data.map(function(data) {
       return (
         <ProductItem data={data} key={data.id}/>
       );
     });
-    var itemList2 = this.props.data.list.map(function(data) {
+    var itemList2 = this.props.data.map(function(data) {
       return (
         <ProductItem2 data={data} key={data.id}/>
       );
@@ -125,13 +137,26 @@ const ProductList = withRouter(React.createClass({
 }));
 
 const ProductPage = React.createClass({
+  getInitialState() {
+    return {
+      data: [],
+    };
+  },
+  fetch(params = {}) {
+     $.get('/api/product',function(data){
+      this.setState({data: data});
+		 }.bind(this));
+  },
+  componentDidMount() {
+    this.fetch();
+  },
   render() {
   return (
     <div style={{minWidth:990}}>
       <Header/>
       <Menu menuId={2}/>
       <Line/>
-      <ProductList data={dataList1}/>
+      <ProductList data={this.state.data}/>
       <Line/>
       <Footer/>
     </div>

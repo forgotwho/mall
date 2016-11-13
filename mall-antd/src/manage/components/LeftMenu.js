@@ -27,10 +27,13 @@ const Sider = React.createClass({
         mode="inline"
       >
         <SubMenu key="sub1" title={<span><span>分类管理</span></span>}>
-         <Menu.Item key="5"><a href="#/tag">分类列表</a></Menu.Item>
+         <Menu.Item key="1"><a href="#/tag">分类列表</a></Menu.Item>
         </SubMenu>
-        <SubMenu key="sub2" title={<span><span>产品管理</span></span>}>
-          <Menu.Item key="5"><a href="#/product">产品列表</a></Menu.Item>
+        <SubMenu key="sub2" title={<span><span>轮播管理</span></span>}>
+         <Menu.Item key="2"><a href="#/banner">轮播列表</a></Menu.Item>
+        </SubMenu>
+        <SubMenu key="sub3" title={<span><span>产品管理</span></span>}>
+          <Menu.Item key="3"><a href="#/product">产品列表</a></Menu.Item>
         </SubMenu>
       </Menu>
     );

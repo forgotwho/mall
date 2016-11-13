@@ -1,0 +1,1 @@
+java -cp mall-0.1.0.jar org.webfunny.mall.Application
