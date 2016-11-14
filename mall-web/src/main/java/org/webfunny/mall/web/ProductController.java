@@ -27,16 +27,24 @@ public class ProductController {
 	private ProductTagRepository productTagRepository;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Product> list(@RequestParam(value = "recommend", required = false) String recommend) {
+	public List<Product> list(@RequestParam(value = "tagId", required = false) Long tagId,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "recommend", required = false) Boolean recommend) {
 		List<Product> productList = new ArrayList<Product>();
 		Iterable<Product> it = null;
 		if (StringUtils.isEmpty(recommend)) {
 			it = productRepository.findAll();
+			for (Iterator<Product> iterator = it.iterator(); iterator.hasNext();) {
+				productList.add(iterator.next());
+			}
 		} else {
-			it = productRepository.findByRecommend(recommend);
-		}
-		for (Iterator<Product> iterator = it.iterator(); iterator.hasNext();) {
-			productList.add(iterator.next());
+			if(!StringUtils.isEmpty(name)){
+				productList = productTagRepository.findByName(recommend, name);
+			}else if(!StringUtils.isEmpty(tagId)){
+				productList = productTagRepository.findByTag(recommend, tagId);
+			}else{
+				productList = productRepository.findByRecommend(recommend);
+			}
 		}
 		return productList;
 	}
@@ -113,6 +121,8 @@ public class ProductController {
 		product = productRepository.save(product);
 		if (product != null && product.getId() == id) {
 			List<ProductTag> productTagList = new ArrayList<ProductTag>();
+			List<ProductTag> tagList = productTagRepository.findByProductId(id);
+			productTagRepository.delete(tagList);
 			if (tagIds != null) {
 				for (String tagId : tagIds.split(",")) {
 					ProductTag productTag = new ProductTag(product.getId(), Long.parseLong(tagId));

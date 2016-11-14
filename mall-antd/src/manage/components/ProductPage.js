@@ -138,6 +138,7 @@ const AddForm = Form.create({
               alert("请求失败");  
             }  
         });
+        values.recommend = this.state.recommend;
         this.props.submit(values);
       }
     });
@@ -343,6 +344,23 @@ const AddForm = Form.create({
           )}
         </FormItem>
       </Col>
+      <Col span={12}>
+        <FormItem
+          {...formItemLayout}
+          label="是否显示"
+          hasFeedback
+        >
+          {getFieldDecorator('recommend', {
+            rules: [{
+            }],
+            valuePropName: 'checked'
+          })(
+            <div>
+              <Switch onChange={this.handleChange}/>
+            </div>
+          )}
+        </FormItem>
+      </Col>
       <Col span={24}>
         <FormItem
         labelCol= {{span: 4}}
@@ -460,6 +478,7 @@ const EditForm = Form.create({
               alert("请求失败");  
             }  
         });
+         values.recommend = this.state.recommend;
         this.props.submit(values);
       }
     });
@@ -706,6 +725,22 @@ const EditForm = Form.create({
           )}
         </FormItem>
       </Col>
+      <Col span={12}>
+        <FormItem
+          {...formItemLayout}
+          label="是否显示"
+          hasFeedback
+        >
+          {getFieldDecorator('recommend', {
+            valuePropName: 'checked',
+            initialValue:this.props.data.recommend
+          })(
+            <div>
+              <Switch onChange={this.handleChange}/>
+            </div>
+          )}
+        </FormItem>
+      </Col>
       <Col span={24}>
         <FormItem
         labelCol= {{span: 4}}
@@ -844,7 +879,7 @@ const ProductPage = React.createClass({
       title: '可选颜色',
       dataIndex: 'colors',
       render: (text, record) => (
-        <div style={{width:30}}>
+        <div style={{width:100}}>
           {this.handleColor(text,record)}
         </div>
       ),
@@ -864,6 +899,11 @@ const ProductPage = React.createClass({
       title: '佩戴周期',
       dataIndex: 'wearCycle',
     }, {
+      title: '是否显示',
+      dataIndex: 'recommend',
+      render: (text, record) => (
+        <span>{record.recommend==true?"是":"否"}</span>
+      ),
     }, {
       title: '显示排序',
       dataIndex: 'sortNum',

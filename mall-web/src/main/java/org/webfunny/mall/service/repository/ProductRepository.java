@@ -7,5 +7,7 @@ import org.webfunny.mall.service.entity.Product;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
 
-	List<Product> findByRecommend(String recommend);
+	List<Product> findByRecommend(Boolean recommend);
+	
+	List<Product> findByRecommendAndName(Boolean recommend,String name);
 }

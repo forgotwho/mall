@@ -7,5 +7,5 @@ import org.webfunny.mall.service.entity.Tag;
 
 public interface TagRepository extends CrudRepository<Tag, Long> {
 
-	List<Tag> findByRecommend(String recommend);
+	List<Tag> findByRecommend(Boolean recommend);
 }

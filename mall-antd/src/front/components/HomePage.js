@@ -20,7 +20,7 @@ const ProductItem = withRouter(React.createClass({
     <div>
       <Card style={{float:'left',width:'50%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
         <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
-          <img width="100%" height="100%" src={this.props.data.image} />
+          <img width="100%" height="100%" src={"/api/img/thumb/"+this.props.data.picture} />
         </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
@@ -46,7 +46,7 @@ const ProductItem2 = withRouter(React.createClass({
     <div>
       <Card style={{float:'left',width:'20%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
         <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
-          <img width="100%" height="100%" src={this.props.data.image} />
+          <img width="100%" height="100%" src={"/api/img/thumb/"+this.props.data.picture} />
         </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
@@ -65,12 +65,12 @@ const ProductItem2 = withRouter(React.createClass({
 
 const ProductList = React.createClass({
   render() {
-    var itemList = this.props.data.list.map(function(data) {
+    var itemList = this.props.data.productList.map(function(data) {
       return (
         <ProductItem data={data} key={data.id}/>
       );
     });
-    var itemList2 = this.props.data.list.map(function(data) {
+    var itemList2 = this.props.data.productList.map(function(data) {
       return (
         <ProductItem2 data={data} key={data.id}/>
       );
@@ -78,20 +78,20 @@ const ProductList = React.createClass({
   return (
     <div>
       <Row type="flex" justify="center">
-        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990,background:'#eeeeee'}}>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990,background:this.props.data.tag.color}}>
           <div style={{width:250,height:60,magin:0,float:'left'}}>
-            <img height="60" src={this.props.data.tag.image} />
+            <img height="60" src={"/api/img/thumb/"+this.props.data.tag.picture} />
           </div>
           <div style={{height:60,marginRight:15,paddingTop:10,float:'right'}}>
-            <p style={{fontSize:24,padding:0}}><a style={{color:'#666666'}} href={"#/product/tag/"+this.props.data.tag.name} >more ></a></p>
+            <p style={{fontSize:24,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id} >more ></a></p>
           </div>
         </Col>
-        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,background:'#eeeeee'}}>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,background:this.props.data.tag.color}}>
           <div style={{width:250,height:40,float:'left'}}>
-            <img height="100%" src={this.props.data.tag.image} />
+            <img height="100%" src={"/api/img/thumb/"+this.props.data.tag.picture} />
           </div>
           <div style={{height:40,marginRight:15,paddingTop:5,float:'right'}}>
-            <p style={{fontSize:16,padding:0}}><a style={{color:'#666666'}} href={"#/product/tag/"+this.props.data.tag.name} >more ></a></p>
+            <p style={{fontSize:16,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id} >more ></a></p>
           </div>
         </Col>
         <Line/>
@@ -107,53 +107,33 @@ const ProductList = React.createClass({
   }
 });
 
-var dataList1 = {
-  tag:{name:"14.00mm",image:"images/02.png"},
-  list:[
-    {id: 1, name: "蓝山", image: "images/21.png",clols:["red","black"]},
-    {id: 2, name: "星河", image: "images/22.png",clols:["red","black"]},
-    {id: 3, name: "流沙", image: "images/23.png",clols:["red","black"]},
-    {id: 4, name: "玛瑙", image: "images/24.png",clols:["red","black"]},
-    {id: 5, name: "蜜恋", image: "images/25.png",clols:["red","black"]}
-  ]
-};
-
-var dataList2 = {
-  tag:{name:"16.00mm",image:"images/02.png"},
-  list:[
-    {id: 11, name: "蓝山2", image: "images/21.png",clols:["red","black"]},
-    {id: 12, name: "星河2", image: "images/22.png",clols:["red","black"]},
-    {id: 13, name: "流沙2", image: "images/23.png",clols:["red","black"]},
-    {id: 14, name: "玛瑙2", image: "images/24.png",clols:["red","black"]},
-    {id: 15, name: "蜜恋2", image: "images/25.png",clols:["red","black"]}
-  ]
-};
-
-var dataList3 = {
-  tag:{name:"18.00mm",image:"images/02.png"},
-  list:[
-    {id: 21, name: "蓝山3", image: "images/21.png",clols:["red","black"]},
-    {id: 22, name: "星河3", image: "images/22.png",clols:["red","black"]},
-    {id: 23, name: "流沙3", image: "images/23.png",clols:["red","black"]},
-    {id: 24, name: "玛瑙3", image: "images/24.png",clols:["red","black"]},
-    {id: 25, name: "蜜恋3", image: "images/25.png",clols:["red","black"]}
-  ]
-};
-
 const HomePage = React.createClass({
+  getInitialState() {
+    return {
+      data: [],
+    };
+  },
+  fetch(params = {}) {
+     $.get('/api/tag/product',{recommend:true},function(data){
+      this.setState({data: data});
+		 }.bind(this));
+  },
+  componentDidMount() {
+    this.fetch();
+  },
   render() {
+    var itemList = this.state.data.map(function(data) {
+      return (
+        <ProductList data={data} key={data.tag.id}/>
+      );
+    });
   return (
     <div style={{minWidth:990}}>
       <Header/>
       <Menu menuId={1}/>
       <Banner/>
       <Line/>
-      <ProductList data={dataList1} id="tag1" key="tag1"/>
-      <Line/>
-      <ProductList data={dataList2} id="tag1" key="tag2"/>
-      <Line/>
-      <ProductList data={dataList3} id="tag1" key="tag3"/>
-      <Line/>
+      {itemList}
       <Footer/>
     </div>
   );

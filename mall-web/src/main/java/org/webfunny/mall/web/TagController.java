@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.webfunny.mall.service.bean.ProductBean;
+import org.webfunny.mall.service.entity.Product;
 import org.webfunny.mall.service.entity.Tag;
+import org.webfunny.mall.service.repository.ProductTagRepository;
 import org.webfunny.mall.service.repository.TagRepository;
 
 @RestController
@@ -22,9 +25,12 @@ public class TagController {
 
 	@Autowired
 	private TagRepository tagRepository;
+	
+	@Autowired
+	private ProductTagRepository productTagRepository;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Tag> list(@RequestParam(value = "recommend", required = false) String recommend,
+	public List<Tag> list(@RequestParam(value = "recommend", required = false) Boolean recommend,
 			HttpServletResponse response) {
 		List<Tag> tagList = new ArrayList<Tag>();
 		Iterable<Tag> it = null;
@@ -37,6 +43,27 @@ public class TagController {
 			tagList.add(iterator.next());
 		}
 		return tagList;
+	}
+	
+	@RequestMapping(value = "product", method = RequestMethod.GET)
+	public List<ProductBean> product(@RequestParam(value = "recommend", required = false) Boolean recommend,
+			HttpServletResponse response) {
+		List<ProductBean> productBeanList = new ArrayList<ProductBean>();
+		Iterable<Tag> it = null;
+		if (StringUtils.isEmpty(recommend)) {
+			it = tagRepository.findAll();
+		} else {
+			it = tagRepository.findByRecommend(recommend);
+		}
+		for (Iterator<Tag> iterator = it.iterator(); iterator.hasNext();) {
+			ProductBean productBean = new ProductBean();
+			Tag tag = iterator.next();
+			List<Product> productList = productTagRepository.findByTag(tag.getId());
+			productBean.setTag(tag);
+			productBean.setProductList(productList);
+			productBeanList.add(productBean);
+		}
+		return productBeanList;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

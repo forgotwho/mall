@@ -51,7 +51,7 @@ const ProductItem2 = withRouter(React.createClass({
     if(this.props.data.colors!=null){
       var color = this.props.data.colors.split(","); 
       for(var i=0;i<color.length;i++){
-        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',width:10,height:10,background:color[i]}}></div>);
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'right',marginLeft:1,width:10,height:10,background:color[i]}}></div>);
       }
     }
   return (
@@ -64,7 +64,7 @@ const ProductItem2 = withRouter(React.createClass({
           <div style={{float:'left',marginLeft:10}}>
             <p style={{fontSize:16}}>{this.props.data.name}</p>
           </div>
-          <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
+          <div style={{float:'right',width:50,marginRight:10,marginTop:5}}>
             {colorList}
           </div>
         </div>
@@ -73,27 +73,6 @@ const ProductItem2 = withRouter(React.createClass({
   );
   }
 }));
-
-var dataList1 = {
-  tag:{name:"14.00mm",image:"images/02.png"},
-  list:[
-    {id: 1, name: "蓝山", image: "images/21.png",clols:["red","black"]},
-    {id: 2, name: "星河", image: "images/22.png",clols:["red","black"]},
-    {id: 3, name: "流沙", image: "images/23.png",clols:["red","black"]},
-    {id: 4, name: "玛瑙", image: "images/24.png",clols:["red","black"]},
-    {id: 5, name: "蜜恋", image: "images/25.png",clols:["red","black"]},
-    {id: 6, name: "蓝山2", image: "images/21.png",clols:["red","black"]},
-    {id: 7, name: "星河2", image: "images/22.png",clols:["red","black"]},
-    {id: 8, name: "流沙2", image: "images/23.png",clols:["red","black"]},
-    {id: 9, name: "玛瑙2", image: "images/24.png",clols:["red","black"]},
-    {id: 10, name: "蜜恋2", image: "images/25.png",clols:["red","black"]},
-    {id: 11, name: "蓝山3", image: "images/21.png",clols:["red","black"]},
-    {id: 12, name: "星河3", image: "images/22.png",clols:["red","black"]},
-    {id: 13, name: "流沙3", image: "images/23.png",clols:["red","black"]},
-    {id: 14, name: "玛瑙3", image: "images/24.png",clols:["red","black"]},
-    {id: 15, name: "蜜恋3", image: "images/25.png",clols:["red","black"]}
-  ]
-};
 
 const ProductList = withRouter(React.createClass({
   render() {
@@ -143,7 +122,15 @@ const ProductPage = React.createClass({
     };
   },
   fetch(params = {}) {
-     $.get('/api/product',function(data){
+    var tagId = this.props.location.query.tagId;
+    var name = this.props.location.query.name;
+    var param = {recommend:true};
+    if(tagId==null){
+      param = {recommend:true,tagId:tagId};
+    }else if(name==null){
+      param = {recommend:true,name:name};
+    }
+     $.get('/api/product',param,function(data){
       this.setState({data: data});
 		 }.bind(this));
   },
