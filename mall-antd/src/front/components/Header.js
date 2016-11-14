@@ -12,9 +12,9 @@ const Header = React.createClass({
     event.preventDefault();
   },
   handleClick(){
-    var tag = document.getElementById("searchInput").value;
-    if(tag!=""){
-      this.props.router.push("/product/tag/"+tag);
+    var keyword = document.getElementById("searchInput").value;
+    if(keyword!=""){
+      this.props.router.push("/product?name="+keyword);
     }
   },
   render() {

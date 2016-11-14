@@ -51,14 +51,14 @@ const ProductItem2 = withRouter(React.createClass({
     if(this.props.data.colors!=null){
       var color = this.props.data.colors.split(","); 
       for(var i=0;i<color.length;i++){
-        colorList.push(<div key={i+"_"+color[i]} style={{float:'right',marginLeft:1,width:10,height:10,background:color[i]}}></div>);
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'right',marginLeft:2,width:10,height:10,background:color[i]}}></div>);
       }
     }
   return (
     <div>
       <Card style={{float:'left',width:'20%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
-        <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
-          <img width="100%" height="100%" src={"/api/img/thumb/"+this.props.data.picture} />
+        <div style={{marginTop:5,marginBottom:5,marginLeft:5,marginRight:5}} >
+          <img width="190" height="190" src={"/api/img/thumb/"+this.props.data.picture} />
         </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
@@ -87,8 +87,10 @@ const ProductList = withRouter(React.createClass({
       );
     });
     var searchText = "";
-    if(this.props.params.name!=null){
-      searchText = "搜索："+"\""+this.props.params.name+"\"";
+    if(this.props.location.query.tagName!=null){
+      searchText = "所有产品>搜索>"+"\""+this.props.location.query.tagName+"\"";
+    }else if(this.props.location.query.name!=null){
+      searchText = "所有产品>搜索>"+"\""+this.props.location.query.name+"\"";
     }
   return (
     <div>
@@ -122,17 +124,15 @@ const ProductPage = React.createClass({
     };
   },
   fetch(params = {}) {
-    var tagId = this.props.location.query.tagId;
-    var name = this.props.location.query.name;
     var param = {recommend:true};
-    if(tagId==null){
-      param = {recommend:true,tagId:tagId};
-    }else if(name==null){
-      param = {recommend:true,name:name};
+    if(this.props.location.query.tagId!=null){
+      param = {recommend:true,tagId:this.props.location.query.tagId};
+    }else if(this.props.location.query.name!=null){
+      param = {recommend:true,name:this.props.location.query.name};
     }
-     $.get('/api/product',param,function(data){
+    $.get('/api/product',param,function(data){
       this.setState({data: data});
-		 }.bind(this));
+		}.bind(this));
   },
   componentDidMount() {
     this.fetch();

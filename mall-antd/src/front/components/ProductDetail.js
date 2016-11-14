@@ -15,7 +15,11 @@ const ProductDetail = React.createClass({
   getInitialState() {
     return {
       data: {},
+      showPicture:""
     };
+  },
+  handleSwitch(event){
+    this.setState({showPicture:event.target.id});
   },
   fetch(params = {}) {
      $.get('/api/product/'+this.props.params.id,function(data){
@@ -28,18 +32,24 @@ const ProductDetail = React.createClass({
   render() {
     var pictureList = [];
     var pictureList2 = [];
+    var defaultPicture = "";
     if(this.state.data.pictureSet!=null){
       var pictureSet = this.state.data.pictureSet.split(","); 
       for(var i=0;i<pictureSet.length;i++){
-        pictureList.push(<img key={pictureSet[i]} width="100" height="100" style={{marginLeft:5,padding:5,border:'1px solid #666666'}} src={"/api/img/thumb/"+pictureSet[i]} />);
+        if(this.state.showPicture==pictureSet[i]){
+          pictureList.push(<img id={pictureSet[i]} key={pictureSet[i]} onClick={this.handleSwitch} width="100" height="100" style={{marginLeft:5,padding:5,border:'2px solid #666666'}} src={"/api/img/thumb/"+pictureSet[i]} />);
+        }else{
+          pictureList.push(<img id={pictureSet[i]} key={pictureSet[i]} onClick={this.handleSwitch} width="100" height="100" style={{marginLeft:5,padding:5,border:'1px solid #666666'}} src={"/api/img/thumb/"+pictureSet[i]} />);
+        }
         pictureList2.push(<div key={pictureSet[i]} ><img width="100%" src={"/api/img/thumb/"+pictureSet[i]} /></div>);
+        defaultPicture = pictureSet[0];
       }
     }
     var colorList = [];
     if(this.state.data.colors!=null){
       var color = this.state.data.colors.split(","); 
       for(var i=0;i<color.length;i++){
-        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',width:15,height:15,background:color[i]}}></div>);
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',marginLeft:2,width:15,height:15,background:color[i]}}></div>);
       }
     }
   return (
@@ -49,8 +59,9 @@ const ProductDetail = React.createClass({
       <Line/>
       <Row type="flex" justify="center">
         <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} style={{width:990,textAlign:'left'}}>
-          <div style={{float:'left',border:1,width:600,textAlign:'center'}}>
-            <div style={{padding:100,margin:0,border:'1px solid #666666'}}><img width="100%" src={"/api/img/thumb/"+this.state.data.picture} /></div>
+          <div style={{float:'left',border:1,textAlign:'center'}}>
+            <div style={{padding:0,margin:0,border:'1px solid #666666'}}>
+              <img width="350" height="350" src={"/api/img/thumb/"+(this.state.showPicture==''?defaultPicture:this.state.showPicture)} /></div>
             <div style={{marginLeft:60,marginRight:60,marginTop:10,marginBottom:10}}>
               {pictureList}
             </div>

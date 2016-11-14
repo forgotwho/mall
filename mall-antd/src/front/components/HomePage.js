@@ -16,6 +16,13 @@ const ProductItem = withRouter(React.createClass({
     this.props.router.push("/product/detail/"+this.props.data.id);
   },
   render() {
+    var colorList = [];
+    if(this.props.data.colors!=null){
+      var color = this.props.data.colors.split(","); 
+      for(var i=0;i<color.length;i++){
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',marginLeft:2,width:20,height:20,background:color[i]}}></div>);
+      }
+    }
   return (
     <div>
       <Card style={{float:'left',width:'50%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
@@ -27,8 +34,7 @@ const ProductItem = withRouter(React.createClass({
             <p style={{fontSize:28}}>{this.props.data.name}</p>
           </div>
           <div style={{float:'right',width:60,marginRight:10,marginTop:5}}>
-            <div style={{float:'left',width:20,height:20,background:'red'}}></div>
-            <div style={{float:'right',width:20,height:20,background:'black'}}></div>
+            {colorList}
           </div>
         </div>
       </Card>
@@ -42,19 +48,25 @@ const ProductItem2 = withRouter(React.createClass({
     this.props.router.push("/product/detail/"+this.props.data.id);
   },
   render() {
+    var colorList = [];
+    if(this.props.data.colors!=null){
+      var color = this.props.data.colors.split(","); 
+      for(var i=0;i<color.length;i++){
+        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',marginLeft:2,width:10,height:10,background:color[i]}}></div>);
+      }
+    }
   return (
     <div>
       <Card style={{float:'left',width:'20%',background:'#FFFFFF'}} bodyStyle={{ padding: 0 }} onClick={this.handleClick}>
-        <div style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}} >
-          <img width="100%" height="100%" src={"/api/img/thumb/"+this.props.data.picture} />
+        <div style={{marginTop:5,marginBottom:5,marginLeft:5,marginRight:5}} >
+          <img width="190" height="190" src={"/api/img/thumb/"+this.props.data.picture} />
         </div>
         <div>
           <div style={{float:'left',marginLeft:10}}>
             <p style={{fontSize:16}}>{this.props.data.name}</p>
           </div>
           <div style={{float:'right',width:30,marginRight:10,marginTop:5}}>
-            <div style={{float:'left',width:10,height:10,background:'red'}}></div>
-            <div style={{float:'right',width:10,height:10,background:'black'}}></div>
+            {colorList}
           </div>
         </div>
       </Card>
@@ -65,14 +77,15 @@ const ProductItem2 = withRouter(React.createClass({
 
 const ProductList = React.createClass({
   render() {
+    var tagId = this.props.data.tag.id;
     var itemList = this.props.data.productList.map(function(data) {
       return (
-        <ProductItem data={data} key={data.id}/>
+        <ProductItem data={data} key={"mobile"+data.id}/>
       );
     });
     var itemList2 = this.props.data.productList.map(function(data) {
       return (
-        <ProductItem2 data={data} key={data.id}/>
+        <ProductItem2 data={data} key={"pc"+data.id}/>
       );
     });
   return (
@@ -83,7 +96,7 @@ const ProductList = React.createClass({
             <img height="60" src={"/api/img/thumb/"+this.props.data.tag.picture} />
           </div>
           <div style={{height:60,marginRight:15,paddingTop:10,float:'right'}}>
-            <p style={{fontSize:24,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id} >more ></a></p>
+            <p style={{fontSize:24,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id+"&tagName="+this.props.data.tag.name} >more ></a></p>
           </div>
         </Col>
         <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,background:this.props.data.tag.color}}>
@@ -91,14 +104,14 @@ const ProductList = React.createClass({
             <img height="100%" src={"/api/img/thumb/"+this.props.data.tag.picture} />
           </div>
           <div style={{height:40,marginRight:15,paddingTop:5,float:'right'}}>
-            <p style={{fontSize:16,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id} >more ></a></p>
+            <p style={{fontSize:16,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id+"&tagName="+this.props.data.tag.name} >more ></a></p>
           </div>
         </Col>
         <Line/>
         <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990}}>
           {itemList}
         </Col>
-        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,height:220}}>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,height:250}}>
           {itemList2}
         </Col>
       </Row>
@@ -114,9 +127,9 @@ const HomePage = React.createClass({
     };
   },
   fetch(params = {}) {
-     $.get('/api/tag/product',{recommend:true},function(data){
+    $.get('/api/tag/product',{recommend:true},function(data){
       this.setState({data: data});
-		 }.bind(this));
+		}.bind(this));
   },
   componentDidMount() {
     this.fetch();
