@@ -12,9 +12,14 @@ const Header = React.createClass({
     event.preventDefault();
   },
   handleClick(){
-    var keyword = document.getElementById("searchInput").value;
-    if(keyword!=""){
-      this.props.router.push("/product?name="+keyword);
+    if(this.props.load==null){
+      var keyword = document.getElementById("searchInput").value;
+      if(keyword!=""){
+        this.props.router.push("/product?name="+keyword);
+      }
+    }else{
+      var keyword = document.getElementById("searchInput").value;
+      this.props.load(keyword);
     }
   },
   render() {

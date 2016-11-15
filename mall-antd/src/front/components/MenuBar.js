@@ -53,6 +53,7 @@ const MenuBar = React.createClass({
   getInitialState() {
     return {
       show: false,
+      keyword:''
     };
   },
   handleMore(value) {
@@ -60,6 +61,25 @@ const MenuBar = React.createClass({
   },
   handleDetail(value) {
     event.preventDefault();
+  },
+  handleClick() {
+    if(this.props.load!=null){
+      this.props.load(" ");
+    }
+  },
+  handleSearch() {
+    if(this.props.load!=null){
+      var keyword = document.getElementById("keyword").value;
+      if(keyword==""){
+        keyword=" ";
+      }
+      this.props.load(keyword);
+      this.setState({keyword:keyword});
+    }else{
+      var keyword = document.getElementById("keyword").value;
+      this.setState({keyword:keyword});
+      this.props.router.push("/product?name="+keyword);
+    }
   },
   handleMenu() {
     var menuItem = document.getElementById('menuItem');
@@ -71,17 +91,18 @@ const MenuBar = React.createClass({
   },
   render() {
     var menuId = this.props.menuId;
+    var handleClick = this.handleClick;
     var menuNodes = dataList.map(function(data) {
       if(data.id==menuId){
         return (
         <div key={data.id} style={{float:'left',width:'20%',height:'100%',padding:8,background:"#999999"}}>
-          <a style={{fontSize:16,color:'#f7f7f7'}} href={data.href} >{data.name}</a>
+          <a style={{fontSize:16,color:'#f7f7f7'}} href={data.href} onClick={handleClick}>{data.name}</a>
         </div>
       );
       }else{
         return (
         <div key={data.id} style={{float:'left',width:'20%',height:'100%',padding:8,background:"#f7f7f7"}}>
-          <a style={{fontSize:16,color:'#666666'}} href={data.href} >{data.name}</a>
+          <a style={{fontSize:16,color:'#666666'}} href={data.href} onClick={handleClick}>{data.name}</a>
         </div>
       );
       }
@@ -116,10 +137,10 @@ const MenuBar = React.createClass({
               <img width="100" height="100" src="images/menu.png"  onClick={this.handleMenu}/>
             </div>
             <div style={{float:'left',marginRight:0,width:730}}>
-              <Input size="large" style={{borderRadius:0,height:100,width:'100%'}}/>
+              <Input id="keyword" size="large" style={{borderRadius:0,height:100,width:'100%'}} defaultValue={this.state.keyword}/>
             </div>
             <div style={{float:'right',width:100,marginRight:0}}>
-              <img src="images/04.png" height="100" />
+              <img src="images/04.png" height="100" onClick={this.handleSearch}/>
             </div>
           </div>
           <div id="menuItem" style={{display:'none'}}>

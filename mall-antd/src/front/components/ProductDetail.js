@@ -15,7 +15,9 @@ const ProductDetail = React.createClass({
   getInitialState() {
     return {
       data: {},
-      showPicture:""
+      showPicture:"",
+      mobileData:[],
+      mobileDefatult:''
     };
   },
   handleSwitch(event){
@@ -23,13 +25,21 @@ const ProductDetail = React.createClass({
   },
   fetch(params = {}) {
      $.get('/api/product/'+this.props.params.id,function(data){
-      this.setState({data: data});
+        var mobileData = data.pictureSet.split(","); 
+        this.setState({
+          data:data,
+          mobileData:mobileData,
+          mobileDefatult:mobileData[0],
+        });
 		 }.bind(this));
   },
   componentDidMount() {
     this.fetch();
   },
   render() {
+    if(this.state.data==null){
+      return (<div></div>);
+    }
     var pictureList = [];
     var pictureList2 = [];
     var defaultPicture = "";
@@ -41,8 +51,11 @@ const ProductDetail = React.createClass({
         }else{
           pictureList.push(<img id={pictureSet[i]} key={pictureSet[i]} onClick={this.handleSwitch} width="100" height="100" style={{marginLeft:5,padding:5,border:'1px solid #666666'}} src={"/api/img/thumb/"+pictureSet[i]} />);
         }
-        pictureList2.push(<div key={pictureSet[i]} ><img width="100%" src={"/api/img/thumb/"+pictureSet[i]} /></div>);
         defaultPicture = pictureSet[0];
+      }
+      
+      for(var i=1;i<this.state.mobileData.length;i++){
+        pictureList2.push(<div key={this.state.mobileData[i]} ><img width="100%" src={"/api/img/thumb/"+this.state.mobileData[i]} /></div>);
       }
     }
     var colorList = [];
@@ -81,8 +94,9 @@ const ProductDetail = React.createClass({
           </div>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}}>
-          <Carousel autoplay dots="false" style={{marginTop:45,marginBottom:45,marginLeft:55,marginRight:55}}>
-            <div>{pictureList2}</div>
+          <Carousel dots="false" style={{marginTop:5,marginBottom:5,marginLeft:5,marginRight:5}}>
+            <div><img width="100%" src={"/api/img/thumb/"+this.state.mobileDefatult} /></div>
+            {pictureList2}
           </Carousel>
           <div style={{marginLeft:40,marginTop:20,marginBottom:20,color:'#666666',fontSize:16}}>
             <div style={{float:'left',width:'50%',marginLeft:0}}>

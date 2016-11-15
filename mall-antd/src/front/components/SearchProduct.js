@@ -117,7 +117,7 @@ const ProductList = withRouter(React.createClass({
   }
 }));
 
-const ProductPage = React.createClass({
+const SearchProduct = React.createClass({
   getInitialState() {
     return {
       data: [],
@@ -125,14 +125,8 @@ const ProductPage = React.createClass({
   },
   fetch(params = {}) {
     var param = {recommend:true};
-    if(params.length>0){
-      param = {recommend:true,name:params.trim()};
-    }else if(this.props.location.query.tagId!=null){
-      param = {recommend:true,tagId:this.props.location.query.tagId};
-    }else if(this.props.location.query.name!=null){
+    if(this.props.location.query.name!=null){
       param = {recommend:true,name:this.props.location.query.name};
-    }else if(this.props.location.query.type!=null){
-      param = {recommend:true};
     }
     $.get('/api/product',param,function(data){
       this.setState({data: data});
@@ -145,7 +139,7 @@ const ProductPage = React.createClass({
   return (
     <div style={{minWidth:990}}>
       <Header load={this.fetch}/>
-      <Menu menuId={2} load={this.fetch}/>
+      <Menu menuId={2}/>
       <Line/>
       <ProductList data={this.state.data}/>
       <Line/>
@@ -155,4 +149,4 @@ const ProductPage = React.createClass({
   }
 });
 
-export default withRouter(ProductPage);
+export default withRouter(SearchProduct);
