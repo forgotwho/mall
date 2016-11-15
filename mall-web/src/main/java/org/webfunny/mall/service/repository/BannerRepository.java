@@ -7,5 +7,5 @@ import org.webfunny.mall.service.entity.Banner;
 
 public interface BannerRepository extends CrudRepository<Banner, Long> {
 
-	List<Banner> findByRecommend(String recommend);
+	List<Banner> findByRecommend(Boolean recommend);
 }

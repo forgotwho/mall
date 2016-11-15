@@ -58,7 +58,12 @@ public class TagController {
 		for (Iterator<Tag> iterator = it.iterator(); iterator.hasNext();) {
 			ProductBean productBean = new ProductBean();
 			Tag tag = iterator.next();
-			List<Product> productList = productTagRepository.findByTag(tag.getId());
+			List<Product> productList = null;
+			if (StringUtils.isEmpty(recommend)) {
+				productList = productTagRepository.findByTag(tag.getId());
+			} else {
+				productList = productTagRepository.findByTag(recommend,tag.getId());
+			}
 			productBean.setTag(tag);
 			productBean.setProductList(productList);
 			productBeanList.add(productBean);

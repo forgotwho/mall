@@ -24,7 +24,7 @@ public class BannerController {
 	private BannerRepository bannerRepository;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Banner> list(@RequestParam(value = "recommend", required = false) String recommend,
+	public List<Banner> list(@RequestParam(value = "recommend", required = false) Boolean recommend,
 			HttpServletResponse response) {
 		List<Banner> bannerList = new ArrayList<Banner>();
 		Iterable<Banner> it = null;
