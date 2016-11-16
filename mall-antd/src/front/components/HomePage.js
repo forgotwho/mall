@@ -91,7 +91,7 @@ const ProductList = React.createClass({
   return (
     <div>
       <Row type="flex" justify="center">
-        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990,background:this.props.data.tag.color}}>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:'100%',background:this.props.data.tag.color}}>
           <div style={{width:250,height:60,magin:0,float:'left'}}>
             <img height="60" src={"/api/img/thumb/"+this.props.data.tag.picture} />
           </div>
@@ -99,7 +99,7 @@ const ProductList = React.createClass({
             <p style={{fontSize:24,padding:0}}><a style={{color:'#666666'}} href={"#/product?tagId="+this.props.data.tag.id+"&tagName="+this.props.data.tag.name} >more ></a></p>
           </div>
         </Col>
-        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,background:this.props.data.tag.color}}>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{minWith:990,width:990,background:this.props.data.tag.color}}>
           <div style={{width:250,height:40,float:'left'}}>
             <img height="100%" src={"/api/img/thumb/"+this.props.data.tag.picture} />
           </div>
@@ -108,7 +108,7 @@ const ProductList = React.createClass({
           </div>
         </Col>
         <Line/>
-        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990}}>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:'100%'}}>
           {itemList}
         </Col>
         <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990,height:250}}>
@@ -141,7 +141,7 @@ const HomePage = React.createClass({
       );
     });
   return (
-    <div style={{minWidth:990}}>
+    <div>
       <Header/>
       <Menu menuId={1}/>
       <Banner/>

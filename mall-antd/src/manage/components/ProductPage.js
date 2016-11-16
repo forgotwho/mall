@@ -47,7 +47,7 @@ const AddView = withRouter(React.createClass({
         </Button>
         <Modal
           maskClosable={false}
-          width={800}
+          width={990}
           visible={this.state.visible}
           title="新增产品"
           onOk={this.handleOk}
@@ -125,10 +125,7 @@ const AddForm = Form.create({
           }
           values.tagIds = tagIds;
         }
-        var productDetail = document.getElementById("detail").contentWindow.document.getElementById("markItUp").value;
-        values.detail = productDetail;
-      //   $.post('/api/img/batchUpload',params,function(data){
-      // 	}.bind(this));
+        values.detail = $("#addMarkItUp").val();
       	$.ajax({  
             url : '/api/img/batchUpload',  
             type : "POST",  
@@ -156,6 +153,9 @@ const AddForm = Form.create({
     this.setState({recommend:checked});
   },
   handleResult(data){
+  },
+  componentDidMount() {
+    $('#addMarkItUp').markItUp(mySettings);
   },
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -386,7 +386,7 @@ const AddForm = Form.create({
         >
           {getFieldDecorator('detail', {
           })(
-            <iframe src="manage/rich/index.html" style={{width:'100%',margin:0,paddig:0,height:300,border:0}}></iframe>
+            <div><textarea id="addMarkItUp" style={{width:'100%',height:300}}></textarea></div>
           )}
         </FormItem>
       </Col>
@@ -464,8 +464,7 @@ const EditForm = Form.create({
           }
           values.tagIds = tagIds;
         }
-        var productDetail = document.getElementById("detail").contentWindow.document.getElementById("markItUp").value;
-        values.detail = productDetail;
+        values.detail = $("#editMarkItUp").val();
       //   $.post('/api/img/batchUpload',params,function(data){
       // 	}.bind(this));
       	$.ajax({  
@@ -520,6 +519,10 @@ const EditForm = Form.create({
       return e;
     }
     return e && e.fileList;
+  },
+  componentDidMount() {
+    $('#editMarkItUp').markItUp(mySettings);
+    //$("#editMarkItUp").val(this.props.data.detail);
   },
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -765,12 +768,8 @@ const EditForm = Form.create({
           hasFeedback
         >
           {getFieldDecorator('detail', {
-            rules: [{
-              required: true, message: '请输入商品详情!',
-            }],
-            initialValue:""+this.props.data.detail
           })(
-            <Input type="textarea" />
+            <div><textarea id="editMarkItUp" style={{width:'100%',height:300}}></textarea></div>
           )}
         </FormItem>
       </Col>
@@ -808,8 +807,8 @@ const ProductPage = React.createClass({
   editProduct(event){
     var id = event.target.id;
     $.get('/api/product/'+id,function(data){
+      $("#editMarkItUp").val(data.detail);
       this.setState({showEdit:true,defaultData:id,editData:data});
-		  document.getElementById("detail").contentWindow.document.getElementById("markItUp").value = data.detail;
 		 }.bind(this));
 		 $.get('/api/tag',function(data){
       var tags = [];
@@ -871,14 +870,14 @@ const ProductPage = React.createClass({
         <img width="50" height="50" src={"/api/img/thumb/"+record.picture} />
       ),
     }, {
-      title: '缩略图',
-      dataIndex: 'pictureSet',
-      render: (text, record) => (
-        <div>
-          {this.handlePictureSet(text,record)}
-        </div>
-      ),
-    }, {
+    //   title: '缩略图',
+    //   dataIndex: 'pictureSet',
+    //   render: (text, record) => (
+    //     <div>
+    //       {this.handlePictureSet(text,record)}
+    //     </div>
+    //   ),
+    // }, {
       title: '可选颜色',
       dataIndex: 'colors',
       render: (text, record) => (
@@ -934,7 +933,7 @@ const ProductPage = React.createClass({
         <Col>
           <Modal
             maskClosable={false}
-            width={800}
+            width={990}
             visible={this.state.showEdit}
             title="修改产品"
             onOk={this.handleOk}

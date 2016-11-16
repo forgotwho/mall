@@ -14,7 +14,7 @@ import Footer from './Footer.js';
 const ProductDetail = React.createClass({
   getInitialState() {
     return {
-      data: {},
+      data: null,
       showPicture:"",
       mobileData:[],
       mobileDefatult:''
@@ -28,6 +28,7 @@ const ProductDetail = React.createClass({
         var mobileData = data.pictureSet.split(","); 
         this.setState({
           data:data,
+          showPicture:data.picture,
           mobileData:mobileData,
           mobileDefatult:mobileData[0],
         });
@@ -62,19 +63,22 @@ const ProductDetail = React.createClass({
     if(this.state.data.colors!=null){
       var color = this.state.data.colors.split(","); 
       for(var i=0;i<color.length;i++){
-        colorList.push(<div key={i+"_"+color[i]} style={{float:'left',marginLeft:2,width:15,height:15,background:color[i]}}></div>);
+        colorList.push(<span key={i+"_"+color[i]} style={{float:'left',marginLeft:2,width:15,height:15,background:color[i]}}></span>);
       }
     }
+    if(this.state.data==null){
+      return (<div></div>);
+    }
   return (
-    <div style={{minWidth:990}}>
+    <div style={{}}>
       <Header/>
       <Menu menuId={2}/>
       <Line/>
       <Row type="flex" justify="center">
-        <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} style={{width:990,textAlign:'left'}}>
+        <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} style={{minWidth:990,width:990,textAlign:'left'}}>
           <div style={{float:'left',border:1,textAlign:'center'}}>
             <div style={{padding:0,margin:0,border:'1px solid #666666'}}>
-              <img width="350" height="350" src={"/api/img/thumb/"+(this.state.showPicture==''?defaultPicture:this.state.showPicture)} /></div>
+              <img width="350" height="350" src={"/api/img/thumb/"+this.state.showPicture} /></div>
             <div style={{marginLeft:60,marginRight:60,marginTop:10,marginBottom:10}}>
               {pictureList}
             </div>
@@ -82,9 +86,9 @@ const ProductDetail = React.createClass({
           <div style={{float:'left',marginLeft:20,marginTop:100,color:'#666666',fontSize:16}}>
             <p>产品名称：<span style={{marginLeft:5}}>{this.state.data.name}</span></p>
             <p>可选颜色：
-              <div style={{float:'right',width:60,marginRight:10,marginTop:5}}>
+              <span style={{float:'right',width:60,marginRight:10,marginTop:5}}>
                 {colorList}
-              </div>
+              </span>
             </p>
             <p>直径：<span style={{marginLeft:5}}>{this.state.data.diameter}</span></p>
             <p>基弧：<span style={{marginLeft:5}}>{this.state.data.baseCurve}</span></p>
@@ -103,9 +107,9 @@ const ProductDetail = React.createClass({
               <p style={{marginTop:20,fontSize:24}}>产品名称：<span style={{marginLeft:5}}>蓝山</span></p>
               <p style={{marginTop:20,fontSize:24,textAlign:'left'}}>
                 可选颜色：
-                <div style={{float:'right',width:60,marginRight:10,marginTop:5}}>
+                <span style={{float:'right',width:60,marginRight:10,marginTop:5}}>
                   {colorList}
-                </div>
+                </span>
               </p>
               <p style={{marginTop:20,fontSize:24}}>直径：<span style={{marginLeft:5}}>14.00 mm</span></p>
               <p style={{marginTop:20,fontSize:24}}>基弧：<span style={{marginLeft:5}}>8.6</span></p>
@@ -120,9 +124,13 @@ const ProductDetail = React.createClass({
         </Col>
       </Row>
       <Row type="flex" justify="center">
-        <Col style={{width:990,textAlign:'left'}}>
+        <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} style={{minWidth:990,width:990,textAlign:'center'}}>
           <hr/>
-          {this.state.data.detail}
+          <div dangerouslySetInnerHTML={{__html:this.state.data.detail}}></div>
+        </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{textAlign:'center'}}>
+          <hr/>
+          <div dangerouslySetInnerHTML={{__html:this.state.data.detail}}></div>
         </Col>
       </Row>
       <Line/>

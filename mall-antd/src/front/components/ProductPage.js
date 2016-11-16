@@ -95,20 +95,20 @@ const ProductList = withRouter(React.createClass({
   return (
     <div>
       <Row type="flex" justify="center">
-        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990}}>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:'100%'}}>
           <div style={{marginBottom:20,float:'left'}}>
             <p style={{fontSize:24}}>{searchText}</p>
           </div>
         </Col>
-        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990}}>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{minWidth:990,width:990}}>
           <div style={{width:250,marginBottom:20,float:'left'}}>
             <p style={{fontSize:16}}>{searchText}</p>
           </div>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:990}}>
+        <Col xs={{span:24}} sm={{span:24}} lg={{span:0}} md={{span:0}} style={{width:'100%'}}>
           {itemList}
         </Col>
-        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{width:990}}>
+        <Col lg={{span:24}} md={{span:24}} xs={{span:0}} sm={{span:0}} style={{minWidth:990,width:990}}>
           {itemList2}
         </Col>
       </Row>
@@ -143,7 +143,7 @@ const ProductPage = React.createClass({
   },
   render() {
   return (
-    <div style={{minWidth:990}}>
+    <div style={{}}>
       <Header load={this.fetch}/>
       <Menu menuId={2} load={this.fetch}/>
       <Line/>

@@ -50,7 +50,6 @@ const Banner = React.createClass({
      if(index>=this.state.pcData.length){
        index = 0;
      }
-     console.log(index,this.state.pcData[index].color);
     this.setState({background:this.state.pcData[index].color});
   },
   render() {
@@ -68,7 +67,7 @@ const Banner = React.createClass({
     }
   return (
     <Row type="flex" justify="center">
-      <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} >
+      <Col xs={{span:0}} sm={{span:0}} md={{span:24}} lg={{span:24}} style={{minWidth:990}}>
         <Carousel autoplay={true} dots={true} beforeChange={this.onChange}>
           <div style={{background:this.state.background,height:300}}>
             <center><a href={this.state.pcDefatultLink}><img width="990" height="300" src={"/api/img/thumb/"+this.state.pcDefatult} /></a></center>
@@ -76,7 +75,7 @@ const Banner = React.createClass({
           {pcPicture}
         </Carousel>
       </Col>
-      <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{width:990,background:'#FFFFFF'}}>
+      <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{width:'100%',background:'#FFFFFF'}}>
         <Carousel autoplay={true} dots={true}>
           <div>
             <center><a href={this.state.mobileDefatultLink}><img width="100%" height="100%" src={"/api/img/thumb/"+this.state.mobileDefatult} /></a></center>
