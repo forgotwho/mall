@@ -131,7 +131,7 @@ const MenuBar = React.createClass({
             <a style={{fontSize:16,color:'#666666'}} href="#/">收藏</a>
           </div>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{width:990,padding:20}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:0}} lg={{span:0}} style={{padding:20}}>
           <div style={{}}>
             <div style={{float:'left',marginRight:20,width:100}}>
               <img width="100" height="100" src="images/menu.png"  onClick={this.handleMenu}/>

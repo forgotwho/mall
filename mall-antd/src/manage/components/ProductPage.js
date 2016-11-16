@@ -47,6 +47,7 @@ const AddView = withRouter(React.createClass({
         </Button>
         <Modal
           maskClosable={false}
+          width={800}
           visible={this.state.visible}
           title="新增产品"
           onOk={this.handleOk}
@@ -69,7 +70,7 @@ const AddForm = Form.create({
 })(React.createClass({
   getInitialState() {
     return {
-      recommend:false
+      recommend:false,
     };
   },
   handleSubmit(e) {
@@ -124,6 +125,8 @@ const AddForm = Form.create({
           }
           values.tagIds = tagIds;
         }
+        var productDetail = document.getElementById("detail").contentWindow.document.getElementById("markItUp").value;
+        values.detail = productDetail;
       //   $.post('/api/img/batchUpload',params,function(data){
       // 	}.bind(this));
       	$.ajax({  
@@ -382,11 +385,8 @@ const AddForm = Form.create({
           hasFeedback
         >
           {getFieldDecorator('detail', {
-            rules: [{
-              required: true, message: '请输入商品详情!',
-            }],
           })(
-            <Input type="textarea" />
+            <iframe src="manage/rich/index.html" style={{width:'100%',margin:0,paddig:0,height:300,border:0}}></iframe>
           )}
         </FormItem>
       </Col>
@@ -464,6 +464,8 @@ const EditForm = Form.create({
           }
           values.tagIds = tagIds;
         }
+        var productDetail = document.getElementById("detail").contentWindow.document.getElementById("markItUp").value;
+        values.detail = productDetail;
       //   $.post('/api/img/batchUpload',params,function(data){
       // 	}.bind(this));
       	$.ajax({  
@@ -807,6 +809,7 @@ const ProductPage = React.createClass({
     var id = event.target.id;
     $.get('/api/product/'+id,function(data){
       this.setState({showEdit:true,defaultData:id,editData:data});
+		  document.getElementById("detail").contentWindow.document.getElementById("markItUp").value = data.detail;
 		 }.bind(this));
 		 $.get('/api/tag',function(data){
       var tags = [];
@@ -931,6 +934,7 @@ const ProductPage = React.createClass({
         <Col>
           <Modal
             maskClosable={false}
+            width={800}
             visible={this.state.showEdit}
             title="修改产品"
             onOk={this.handleOk}
