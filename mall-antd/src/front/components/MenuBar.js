@@ -67,14 +67,27 @@ const MenuBar = React.createClass({
       this.props.load(" ");
     }
   },
+  handlerKeyUp(event){
+    if(event.keyCode === 13){
+      var keyword = event.target.value;
+      if(this.props.load==null){
+        if(keyword!=""){
+          this.props.router.push("/product?name="+keyword);
+          this.setState({keyword:keyword});
+        }
+      }else{
+        this.props.load(keyword);
+        this.setState({keyword:keyword});
+      }
+    }
+  },
   handleSearch() {
     if(this.props.load!=null){
       var keyword = document.getElementById("keyword").value;
-      if(keyword==""){
-        keyword=" ";
+      if(keyword!=""){
+        this.props.load(keyword);
+        this.setState({keyword:keyword});
       }
-      this.props.load(keyword);
-      this.setState({keyword:keyword});
     }else{
       var keyword = document.getElementById("keyword").value;
       this.setState({keyword:keyword});
@@ -137,7 +150,7 @@ const MenuBar = React.createClass({
               <img width="100" height="100" src="images/menu.png"  onClick={this.handleMenu}/>
             </div>
             <div style={{float:'left',marginRight:0,width:'60%'}}>
-              <Input id="keyword" size="large" style={{borderRadius:0,height:100,width:'100%'}} defaultValue={this.state.keyword}/>
+              <Input id="keyword" size="large" style={{borderRadius:0,height:100,width:'100%',fontSize:34}} defaultValue={this.state.keyword} onKeyUp={this.handlerKeyUp}/>
             </div>
             <div style={{float:'right',width:100,marginRight:0,width:'15%'}}>
               <img src="images/04.png" height="100" onClick={this.handleSearch}/>

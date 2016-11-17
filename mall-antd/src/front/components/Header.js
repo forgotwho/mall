@@ -11,11 +11,27 @@ const Header = React.createClass({
   handleDetail(value) {
     event.preventDefault();
   },
+  handlerKeyUp(event){
+    if(event.keyCode === 13){
+      var keyword = event.target.value;
+      if(this.props.load==null){
+        if(keyword!=""){
+          this.props.router.push("/product?name="+keyword);
+        }else{
+          this.props.router.push("/product");
+        }
+      }else{
+        this.props.load(keyword);
+      }
+    }
+  },
   handleClick(){
     if(this.props.load==null){
       var keyword = document.getElementById("searchInput").value;
       if(keyword!=""){
         this.props.router.push("/product?name="+keyword);
+      }else{
+        this.props.router.push("/product");
       }
     }else{
       var keyword = document.getElementById("searchInput").value;
@@ -35,7 +51,7 @@ const Header = React.createClass({
           </div>
           <div style={{float:'right',textAlign:'left',width:294,marginTop:45}}>
             <div style={{float:'left',width:260,marginTop:0}}>
-              <Input id="searchInput" size="large" style={{borderRadius:0,height:34}}/>
+              <Input id="searchInput" size="large" style={{borderRadius:0,height:34}} onKeyUp={this.handlerKeyUp}/>
             </div>
             <div style={{float:'right',width:34,marginTop:0}}>
               <img src="images/04.png" onClick={this.handleClick}/>

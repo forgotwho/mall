@@ -91,6 +91,10 @@ const ProductList = withRouter(React.createClass({
       searchText = "所有产品>搜索>"+"\""+this.props.location.query.tagName+"\"";
     }else if(this.props.location.query.name!=null){
       searchText = "所有产品>搜索>"+"\""+this.props.location.query.name+"\"";
+    }else{
+      if(this.props.keyword!=""){
+        searchText = "所有产品>搜索>"+"\""+this.props.keyword+"\"";
+      }
     }
   return (
     <div>
@@ -121,12 +125,15 @@ const ProductPage = React.createClass({
   getInitialState() {
     return {
       data: [],
+      keyword:''
     };
   },
   fetch(params = {}) {
+    var keyword = "";
     var param = {recommend:true};
     if(params.length>0){
       param = {recommend:true,name:params.trim()};
+      keyword = params.trim();
     }else if(this.props.location.query.tagId!=null){
       param = {recommend:true,tagId:this.props.location.query.tagId};
     }else if(this.props.location.query.name!=null){
@@ -135,7 +142,7 @@ const ProductPage = React.createClass({
       param = {recommend:true};
     }
     $.get('/api/product',param,function(data){
-      this.setState({data: data});
+      this.setState({data: data,keyword:keyword});
 		}.bind(this));
   },
   componentDidMount() {
@@ -147,7 +154,7 @@ const ProductPage = React.createClass({
       <Header load={this.fetch}/>
       <Menu menuId={2} load={this.fetch}/>
       <Line/>
-      <ProductList data={this.state.data}/>
+      <ProductList keyword={this.state.keyword} data={this.state.data}/>
       <Line/>
       <Footer/>
     </div>
