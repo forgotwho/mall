@@ -358,9 +358,7 @@ const AddForm = Form.create({
             }],
             valuePropName: 'checked'
           })(
-            <div>
               <Switch onChange={this.handleChange}/>
-            </div>
           )}
         </FormItem>
       </Col>
@@ -740,9 +738,7 @@ const EditForm = Form.create({
             valuePropName: 'checked',
             initialValue:this.props.data.recommend
           })(
-            <div>
               <Switch onChange={this.handleChange}/>
-            </div>
           )}
         </FormItem>
       </Col>
