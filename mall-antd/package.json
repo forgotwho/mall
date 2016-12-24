@@ -2,7 +2,8 @@
   "private": true,
   "entry": {
     "index": "./src/index.js",
-    "manage": "./src/manage.js"
+    "manage": "./src/manage.js",
+    "weixin": "./src/weixin.js"
   },
   "dependencies": {
     "antd": "^2.1.0",

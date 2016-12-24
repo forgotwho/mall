@@ -35,6 +35,9 @@ const Sider = React.createClass({
         <SubMenu key="sub3" title={<span><span>产品管理</span></span>}>
           <Menu.Item key="3"><a href="#/product">产品列表</a></Menu.Item>
         </SubMenu>
+        <SubMenu key="sub4" title={<span><span>订单管理</span></span>}>
+          <Menu.Item key="4"><a href="#/order">订单列表</a></Menu.Item>
+        </SubMenu>
       </Menu>
     );
   },
