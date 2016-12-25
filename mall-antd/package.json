@@ -3,7 +3,8 @@
   "entry": {
     "index": "./src/index.js",
     "manage": "./src/manage.js",
-    "weixin": "./src/weixin.js"
+    "weixin": "./src/weixin.js",
+    "order": "./src/order.js"
   },
   "dependencies": {
     "antd": "^2.1.0",

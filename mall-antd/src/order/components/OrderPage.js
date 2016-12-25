@@ -37,6 +37,12 @@ const AddView = withRouter(React.createClass({
   handleCancel() {
     this.setState({ visible: false });
   },
+  handleTemplate1() {
+    window.location.href = "/order/订单批量导入模板1.xlsx";
+  },
+  handleTemplate2() {
+    window.location.href = "/order/订单批量导入模板2.xls";
+  },
   render() {
     const uploadProps = {
       name: 'file',
@@ -48,10 +54,16 @@ const AddView = withRouter(React.createClass({
         <Button type="primary" style={{marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.showModal}>
           新增单号
         </Button>
+        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleTemplate1}>
+          模板下载1
+        </Button>
+        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleTemplate2}>
+          模板下载2
+        </Button>
         <Upload {...uploadProps} onChange={this.handleChange}>
           <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}}>
-          批量上传
-        </Button>
+            批量上传
+          </Button>
         </Upload>
         <Modal
           maskClosable={false}
