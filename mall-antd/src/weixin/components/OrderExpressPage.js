@@ -26,13 +26,12 @@ const OrderExpressPage = React.createClass({
   },
   handlerKeyUp(event){
     if(event.keyCode === 13){
-      if(event.target.value==null||event.target.value==""){
-        return;
+      if(event.target.value!=null&&event.target.value!=""){
+        var param = {};
+        $.get('/api/order/'+event.target.value,param,function(data){
+          this.setState({data: data,showResult:true});
+    		}.bind(this));
       }
-      var param = {orderId:event.target.value};
-      $.get('/api/order/express',param,function(data){
-        this.setState({data: data,showResult:true});
-  		}.bind(this));
     }
   },
   componentDidMount() {

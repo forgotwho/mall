@@ -46,7 +46,7 @@ const AddView = withRouter(React.createClass({
     return (
       <div>
         <Button type="primary" style={{marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.showModal}>
-          新增订单
+          新增单号
         </Button>
         <Upload {...uploadProps} onChange={this.handleChange}>
           <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}}>
@@ -225,7 +225,7 @@ const OrderPage = React.createClass({
   },
   editTag(event){
     var id = event.target.id;
-    $.get('/api/order/'+id,function(data){
+    $.get('/api/order/get/'+id,function(data){
       this.setState({showEdit:true,defaultData:id,editData:data});
 		 }.bind(this));
   },
@@ -273,7 +273,7 @@ const OrderPage = React.createClass({
           <Modal
             maskClosable={false}
             visible={this.state.showEdit}
-            title="修改分类"
+            title="修改单号"
             onOk={this.handleOk}
             onCancel={this.handleCancel}
             footer={[

@@ -44,6 +44,15 @@ public class OrderExpressController {
 		return orderExpress;
 	}
 	
+	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
+	public OrderExpress get(@PathVariable Long id) {
+		OrderExpress orderExpress = orderExpressRepository.findOne(id);
+		if(orderExpress==null){
+			orderExpress = new OrderExpress("","");
+		}
+		return orderExpress;
+	}
+	
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public boolean add(@RequestParam(value = "orderId", required = true) String orderId,
 			@RequestParam(value = "expressId", required = true) String expressId) {

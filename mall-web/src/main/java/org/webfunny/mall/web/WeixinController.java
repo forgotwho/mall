@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/weixin")
 public class WeixinController {
 
-	private static String TOKEN = "neocomso.com";
+	private static String TOKEN = "neocosmo.com";
 
 	@RequestMapping(value = "/token")
 	public void token(HttpServletRequest request, HttpServletResponse response) {
