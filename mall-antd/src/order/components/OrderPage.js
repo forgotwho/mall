@@ -37,11 +37,16 @@ const AddView = withRouter(React.createClass({
   handleCancel() {
     this.setState({ visible: false });
   },
-  handleTemplate1() {
-    window.location.href = "/order/订单批量导入模板1.xlsx";
+  handleBatchDelete() {
+    this.props.batchDelete();
   },
-  handleTemplate2() {
-    window.location.href = "/order/订单批量导入模板2.xls";
+  handleEmpty() {
+    $.post('/api/order/deleteAll',function(data){
+		  this.props.reload();
+		 }.bind(this));
+  },
+  handleTemplate() {
+    window.location.href = "/order/订单批量导入模板.xls";
   },
   render() {
     const uploadProps = {
@@ -54,11 +59,14 @@ const AddView = withRouter(React.createClass({
         <Button type="primary" style={{marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.showModal}>
           新增单号
         </Button>
-        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleTemplate1}>
-          模板下载1
+        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleBatchDelete}>
+          批量删除
         </Button>
-        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleTemplate2}>
-          模板下载2
+        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleEmpty}>
+          全部清空
+        </Button>
+        <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}} onClick={this.handleTemplate}>
+          模板下载
         </Button>
         <Upload {...uploadProps} onChange={this.handleChange}>
           <Button type="primary" style={{marginLeft:10,marginTop:10,marginBottom:10,width:100,height:30,border:0,fontSize:16}}>
@@ -224,7 +232,9 @@ const OrderPage = React.createClass({
       loading:false,
       showEdit:false,
       defaultData:{},
-      editData:{}
+      editData:{},
+      selectedRowKeys: [],
+      selectedRows:[]
     };
   },
   fetch(params = {}) {
@@ -256,10 +266,29 @@ const OrderPage = React.createClass({
 		  this.fetch();
 		 }.bind(this));
   },
+  deleteBatchTag(){
+    var ids = [];
+    for(var i=0;i<this.state.selectedRows.length;i++){
+      ids.push(this.state.selectedRows[i].id);
+    }
+    if(ids.length>0){
+      $.post('/api/order/batchDelete',{ids:ids.join(",")},function(data){
+        this.setState({selectedRowKeys:[],selectedRows:[]});
+  		  this.fetch();
+  		 }.bind(this));
+    }
+  },
+  onSelectChange(selectedRowKeys,selectedRows) {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys,selectedRows });
+  },
   render() {
     const columns = [{
       title: '序号',
-      dataIndex: 'id',
+      dataIndex: 'index',
+      render: (text, record) => (
+        <a href="#">{record.index}</a>
+      ),
     }, {
       title: '订单号',
       dataIndex: 'orderId',
@@ -277,11 +306,16 @@ const OrderPage = React.createClass({
         </span>
       ),
     }];
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
   return (
     <div>
       <Row>
         <Col>
-          <AddView reload={this.fetch}/>
+          <AddView reload={this.fetch} batchDelete={this.deleteBatchTag}/>
           <Modal
             maskClosable={false}
             visible={this.state.showEdit}
@@ -293,7 +327,7 @@ const OrderPage = React.createClass({
           >
              <EditForm tagId={this.state.defaultData} data={this.state.editData} submit={this.handleSubmit} cancel={this.handleCancel}/>
           </Modal>
-          <Table columns={columns} dataSource={this.state.data} />
+          <Table rowSelection={rowSelection} columns={columns} dataSource={this.state.data} />
         </Col>
       </Row>
     </div>
