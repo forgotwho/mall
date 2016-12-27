@@ -46,15 +46,15 @@ const OrderExpressPage = React.createClass({
         <Row type="flex" justify="center">
           <Col xs={{span:24}} sm={{span:24}} lg={{span:24}} md={{span:24}} style={{textAlign:'center'}}>
             <div style={{marginTop:100,marginLeft:30,marginRight:30}}>
-              <Input style={{height:90,fontSize:34,textAlign:'center'}} placeholder="请输入您的订单号" onChange={this.handleChange} onKeyUp={this.handlerKeyUp}/>
+              <Input style={{height:45,fontSize:22,textAlign:'center',lineHeight:'30px'}} placeholder="请输入您的订单号" onChange={this.handleChange} onKeyUp={this.handlerKeyUp}/>
             </div>
             <div style={{marginTop:30,marginLeft:30,marginRight:30}}>
-              <Button type="primary" style={{height:90,background:'#ad5ca0',fontSize:34,width:'100%'}} onClick={this.handleSearch}>开始查询</Button>
+              <Button type="primary" style={{height:45,background:'#ad5ca0',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>
             </div>
             <div style={{marginTop:30,marginLeft:30,marginRight:30,textAlign:'left',display:display}}>
               <hr style={{marginTop:30,border:'1px dashed #000000'}}/>
-              <p style={{fontSize:34,height:30,marginTop:30,lineHeight:'30px'}}>查询结果：</p>
-              <p style={{fontSize:34,height:30,marginTop:30,lineHeight:'30px'}}><strong>{this.state.data.expressId==""?"订单号不存在,未找到快递单号":this.state.data.expressId}</strong></p>
+              <p style={{fontSize:22,height:30,marginTop:30,lineHeight:'30px'}}>查询结果：</p>
+              <p style={{fontSize:22,height:30,marginTop:30,lineHeight:'30px'}}><strong>{this.state.data.expressId==""?"订单号不存在,未找到快递单号":this.state.data.expressId}</strong></p>
             </div>
           </Col>
         </Row>
