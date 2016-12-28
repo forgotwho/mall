@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.apache.tomcat.util.security.MD5Encoder;
-
 @Entity
 public class User {
 
@@ -19,8 +17,9 @@ public class User {
     protected User() {}
     
     public User(String username, String password) {
+    	super();
         this.username = username;
-        this.password = MD5Encoder.encode(password.getBytes());
+        this.password = password;
     }
 
     @Override

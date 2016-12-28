@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-
+var cookie = require('cookie');
 import reqwest from 'reqwest';
 import { withRouter,Link } from 'react-router';
 
@@ -281,6 +281,17 @@ const OrderPage = React.createClass({
   onSelectChange(selectedRowKeys,selectedRows) {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys,selectedRows });
+  },
+  componentDidMount() {
+    var cookies = cookie.parse(document.cookie);
+    if(cookies==null){
+      this.props.router.replace("/login");
+    }else{
+      var uid = cookies.uid;
+      if(uid==undefined){
+        this.props.router.replace("/login");
+      }
+    }
   },
   render() {
     const columns = [{
