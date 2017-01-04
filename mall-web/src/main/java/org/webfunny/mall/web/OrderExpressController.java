@@ -43,9 +43,12 @@ public class OrderExpressController {
 	
 	@RequestMapping(value = "/{orderId}", method = RequestMethod.GET)
 	public OrderExpress get(@PathVariable String orderId) {
-		OrderExpress orderExpress = orderExpressRepository.findByOrderId(orderId);
-		if(orderExpress==null){
+		List<OrderExpress> orderExpressList = orderExpressRepository.findByOrderId(orderId);
+		OrderExpress orderExpress = null;
+		if(orderExpressList==null||orderExpressList.isEmpty()){
 			orderExpress = new OrderExpress("","");
+		}else{
+			orderExpress = orderExpressList.get(0);
 		}
 		return orderExpress;
 	}

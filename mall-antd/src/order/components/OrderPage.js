@@ -242,9 +242,6 @@ const OrderPage = React.createClass({
       this.setState({data: data,showEdit:false});
 		 }.bind(this));
   },
-  componentDidMount() {
-    this.fetch();
-  },
   editTag(event){
     var id = event.target.id;
     $.get('/api/order/get/'+id,function(data){
@@ -290,7 +287,9 @@ const OrderPage = React.createClass({
       var uid = cookies.uid;
       if(uid==undefined){
         this.props.router.replace("/login");
-      }
+      }else{
+		this.fetch();
+	  }
     }
   },
   render() {
