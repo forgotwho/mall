@@ -1,7 +1,9 @@
 package org.webfunny.mall.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.webfunny.mall.service.bean.OrderExpressBean;
+import org.webfunny.mall.service.bean.WaybillProcessInfo;
 import org.webfunny.mall.service.entity.OrderExpress;
 import org.webfunny.mall.service.repository.OrderExpressRepository;
 
@@ -39,6 +43,42 @@ public class OrderExpressController {
 			orderExpressBeanList.add(new OrderExpressBean(orderExpress.getId(), orderExpress.getOrderId(),orderExpress.getExpressId(),index++));
 		}
 		return orderExpressBeanList;
+	}
+	
+	@RequestMapping(value = "/receive/{orderId}", method = RequestMethod.GET)
+	public List<WaybillProcessInfo> receiveAndSendMessageService(@PathVariable String orderId) {
+		List<OrderExpress> orderExpressList = orderExpressRepository.findByOrderId(orderId);
+		OrderExpress orderExpress = null;
+		if(orderExpressList==null||orderExpressList.isEmpty()){
+			orderExpress = new OrderExpress("","");
+		}else{
+			orderExpress = orderExpressList.get(0);
+		}
+		String user_id = "yto_user";
+		String app_key = "ABCDEF";
+		String format = "XML";
+		String method = "yto.Marketing.WaybillTrace";
+		String timestamp = "2016-6-1 13:14:35";
+		String v = "1.01";
+		String secretKey = "123456";
+		
+		String number = "710024476256";
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("app_key").append(app_key)
+		.append("format").append(format)
+		.append("method").append(method)
+		.append("timestamp").append(timestamp)
+		.append("user_id").append(user_id)
+		.append("v").append(v);
+		
+		String sign = secretKey+sb.toString();
+		sign = MD5Encoder.encode(sign.getBytes());
+		sign = sign.toUpperCase();
+		String parameter = "sign="+sign+"&app_key="+app_key+"&format="+format+"&method="+method+"&timestamp="+timestamp+"&user_id="+user_id+"&v="+v+"&param=<!--?xml  version=\"1.0\"><ufinterface><Result><WaybillCode><Number>"+number+"</Number></WaybillCode></Result></ufinterface>";
+		List<WaybillProcessInfo> result = new ArrayList<WaybillProcessInfo>();
+		
+		return result;
 	}
 	
 	@RequestMapping(value = "/{orderId}", method = RequestMethod.GET)
