@@ -74,7 +74,7 @@ public class OrderExpressController {
 			} else {
 				orderExpress = orderExpressList.get(0);
 			}
-			
+			System.out.println("getExpressId="+orderExpress.getExpressId());
 			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 			String timestamp = sdf.format(new Date());
 			
@@ -91,12 +91,10 @@ public class OrderExpressController {
 					+ "&timestamp=" + timestamp + "&user_id=" + user_id + "&v=" + v
 					+ "&param=<?xml version=\"1.0\"?><ufinterface><Result><WaybillCode><Number>" + number
 					+ "</Number></WaybillCode></Result></ufinterface>";
-			
+			System.out.println("parameter="+parameter);
 			URL url = new URL(urlStr);
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
-			con.setRequestProperty("Pragma:", "no-cache");
-			con.setRequestProperty("Cache-Control", "no-cache");
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded charset=UTF-8");
 			
 			OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
@@ -116,7 +114,7 @@ public class OrderExpressController {
 				waybillProcessInfoResult = XMLUtil.toBean(result, WaybillProcessInfoResult.class);
 			}
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		return waybillProcessInfoResult;
 	}
