@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 import { Col, Row } from 'antd';
 import { Input } from 'antd';
 import { Button } from 'antd';
+import { Timeline } from 'antd';
 
 const OrderExpressPage = React.createClass({
   getInitialState() {
     return {
       showResult:false,
       orderId:"",
-      data: {},
+      data: [],
     };
   },
   handleChange(event) {
@@ -20,16 +21,24 @@ const OrderExpressPage = React.createClass({
       return;
     }
     var param = {};
-    $.get('/api/order/'+this.state.orderId,param,function(data){
-      this.setState({data: data,showResult:true});
+    $.get('/api/order/receive/'+this.state.orderId,param,function(data){
+      if(data.list==null){
+        this.setState({data: [],showResult:true});
+      }else{
+        this.setState({data: data.list,showResult:true});
+      }
 		}.bind(this));
   },
   handlerKeyUp(event){
     if(event.keyCode === 13){
       if(event.target.value!=null&&event.target.value!=""){
         var param = {};
-        $.get('/api/order/'+event.target.value,param,function(data){
-          this.setState({data: data,showResult:true});
+        $.get('/api/order/receive/'+event.target.value,param,function(data){
+          if(data.list==null){
+            this.setState({data: [],showResult:true});
+          }else{
+            this.setState({data: data.list,showResult:true});
+          }
     		}.bind(this));
       }
     }
@@ -41,6 +50,13 @@ const OrderExpressPage = React.createClass({
     if(this.state.showResult){
       display = "";
     }
+    var expressId = "";
+    var itemList = this.state.data.map(function(data) {
+      expressId = data.waybill_No;
+      return (
+        <Timeline.Item key={data.upload_Time}><p style={{fontSize:16}}>{data.upload_Time}</p><p style={{fontSize:16}}>{data.processInfo}</p></Timeline.Item>
+      );
+    });
     return (
       <div>
         <Row type="flex" justify="center">
@@ -53,8 +69,10 @@ const OrderExpressPage = React.createClass({
             </div>
             <div style={{marginTop:30,marginLeft:30,marginRight:30,textAlign:'left',display:display}}>
               <hr style={{marginTop:30,border:'1px dashed #000000'}}/>
-              <p style={{fontSize:22,height:30,marginTop:30,lineHeight:'30px'}}>查询结果：</p>
-              <p style={{fontSize:22,height:30,marginTop:30,lineHeight:'30px'}}><strong>{this.state.data.expressId==""?"订单号不存在,未找到快递单号":this.state.data.expressId}</strong></p>
+              <p style={{fontSize:22,height:30,marginTop:30,marginBottom:30,lineHeight:'30px'}}>快递单号：<strong>{expressId==""?"订单号不存在,未找到快递单号":expressId}</strong></p>
+              <Timeline>
+                {itemList}
+              </Timeline>
             </div>
           </Col>
         </Row>
