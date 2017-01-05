@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.webfunny.mall.service.bean.OrderExpressBean;
+import org.webfunny.mall.service.bean.WaybillProcessInfo;
 import org.webfunny.mall.service.bean.WaybillProcessInfoResult;
 import org.webfunny.mall.service.entity.OrderExpress;
 import org.webfunny.mall.service.repository.OrderExpressRepository;
@@ -112,6 +114,9 @@ public class OrderExpressController {
 				String result = (String)map.get("Result");
 				result = "<Result>" + result + "</Result>";
 				waybillProcessInfoResult = XMLUtil.toBean(result, WaybillProcessInfoResult.class);
+				List<WaybillProcessInfo> list = new ArrayList<WaybillProcessInfo>();
+				Collections.reverse(list);
+				waybillProcessInfoResult.setList(list);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
