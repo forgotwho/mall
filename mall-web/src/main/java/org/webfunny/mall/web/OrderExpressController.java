@@ -114,9 +114,11 @@ public class OrderExpressController {
 				String result = (String)map.get("Result");
 				result = "<Result>" + result + "</Result>";
 				waybillProcessInfoResult = XMLUtil.toBean(result, WaybillProcessInfoResult.class);
-				List<WaybillProcessInfo> list = new ArrayList<WaybillProcessInfo>();
-				Collections.reverse(list);
-				waybillProcessInfoResult.setList(list);
+				List<WaybillProcessInfo> list = waybillProcessInfoResult.getList();
+				if(list!=null&&!list.isEmpty()){
+					Collections.reverse(list);
+					waybillProcessInfoResult.setList(list);
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
