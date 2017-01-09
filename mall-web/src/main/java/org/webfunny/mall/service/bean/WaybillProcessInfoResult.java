@@ -8,6 +8,8 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("Result")
 public class WaybillProcessInfoResult {
+	
+	private String expressId;
 
 	@XStreamImplicit
     private List<WaybillProcessInfo> list;
@@ -19,4 +21,13 @@ public class WaybillProcessInfoResult {
 	public void setList(List<WaybillProcessInfo> list) {
 		this.list = list;
 	}
+
+	public String getExpressId() {
+		return expressId;
+	}
+
+	public void setExpressId(String expressId) {
+		this.expressId = expressId;
+	}
+	
 }

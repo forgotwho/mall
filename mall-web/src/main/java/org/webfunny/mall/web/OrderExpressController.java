@@ -120,6 +120,7 @@ public class OrderExpressController {
 					waybillProcessInfoResult.setList(list);
 				}
 			}
+			waybillProcessInfoResult.setExpressId(orderExpress.getExpressId());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
