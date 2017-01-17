@@ -234,12 +234,20 @@ const OrderPage = React.createClass({
       defaultData:{},
       editData:{},
       selectedRowKeys: [],
-      selectedRows:[]
+      selectedRows:[],
+      pagination: {},
     };
   },
   fetch(params = {}) {
-     $.get('/api/order',function(data){
-      this.setState({data: data,showEdit:false});
+     console.log('params:', params);
+     var page = 1;
+     if(params.page!=null&&params.page!=0){
+       page = params.page;
+     }
+     $.get('/api/order/search?page='+page,function(data){
+      const pagination = this.state.pagination;
+      pagination.total = data.totalElements;
+      this.setState({data: data.content,showEdit:false,pagination:pagination});
 		 }.bind(this));
   },
   editTag(event){
@@ -279,6 +287,16 @@ const OrderPage = React.createClass({
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys,selectedRows });
   },
+  handleTableChange(pagination, filters, sorter) {
+    const pager = this.state.pagination;
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    this.fetch({
+      page: pagination.current,
+    });
+  },
   componentDidMount() {
     var cookies = cookie.parse(document.cookie);
     if(cookies==null){
@@ -288,7 +306,7 @@ const OrderPage = React.createClass({
       if(uid==undefined){
         this.props.router.replace("/login");
       }else{
-		this.fetch();
+		this.fetch({page:1});
 	  }
     }
   },
@@ -337,7 +355,12 @@ const OrderPage = React.createClass({
           >
              <EditForm tagId={this.state.defaultData} data={this.state.editData} submit={this.handleSubmit} cancel={this.handleCancel}/>
           </Modal>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={this.state.data} />
+          <Table 
+            rowSelection={rowSelection} 
+            columns={columns} 
+            dataSource={this.state.data} 
+            pagination={this.state.pagination}
+            onChange={this.handleTableChange}/>
         </Col>
       </Row>
     </div>

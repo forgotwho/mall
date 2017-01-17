@@ -21,6 +21,13 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,6 +71,27 @@ public class OrderExpressController {
 		}
 		return orderExpressBeanList;
 	}
+	
+	@RequestMapping(value = "/search",method = RequestMethod.GET)
+	public Page<OrderExpressBean> page(@RequestParam(value = "page", required = false) Integer page,HttpServletResponse response) {
+		if(page==null||page.intValue()==0){
+			page = 1; 
+		}
+		page = page -1;
+		Integer size = 10;
+		Sort sort = new Sort(Direction.DESC, "id");
+		Pageable pageable = new PageRequest(page,size,sort);
+		Page<OrderExpress> orderExpressPage = (Page<OrderExpress>) orderExpressRepository.findAll(pageable);
+		List<OrderExpressBean> orderExpressBeanList = new ArrayList<OrderExpressBean>();
+		Long index = Long.valueOf(orderExpressPage.getNumber()*orderExpressPage.getSize())+1;
+		for (OrderExpress orderExpress : orderExpressPage.getContent()) {
+			orderExpressBeanList.add(new OrderExpressBean(orderExpress.getId(), orderExpress.getOrderId(),
+					orderExpress.getExpressId(), index++));
+		}
+		Pageable orderPage = new PageRequest(orderExpressPage.getNumber(),orderExpressPage.getSize());
+		Page<OrderExpressBean> orderResult = new PageImpl<OrderExpressBean>(orderExpressBeanList,orderPage,orderExpressPage.getTotalElements());
+		return orderResult;
+	}
 
 	@RequestMapping(value = "/receive/{orderId}", method = RequestMethod.GET)
 	public WaybillProcessInfoResult receiveAndSendMessageService(@PathVariable String orderId) {
@@ -76,7 +104,7 @@ public class OrderExpressController {
 			} else {
 				orderExpress = orderExpressList.get(0);
 			}
-			System.out.println("getExpressId="+orderExpress.getExpressId());
+			//System.out.println("getExpressId="+orderExpress.getExpressId());
 			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 			String timestamp = sdf.format(new Date());
 			
@@ -93,7 +121,7 @@ public class OrderExpressController {
 					+ "&timestamp=" + timestamp + "&user_id=" + user_id + "&v=" + v
 					+ "&param=<?xml version=\"1.0\"?><ufinterface><Result><WaybillCode><Number>" + number
 					+ "</Number></WaybillCode></Result></ufinterface>";
-			System.out.println("parameter="+parameter);
+			//System.out.println("parameter="+parameter);
 			URL url = new URL(urlStr);
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
@@ -177,6 +205,9 @@ public class OrderExpressController {
 						String orderId = row.getCell(0).getStringCellValue();
 						String expressId = row.getCell(1).getStringCellValue();
 						orderExpress = new OrderExpress(orderId, expressId);
+						if(StringUtils.isEmpty(orderId)){
+							continue;
+						}
 						orderExpressList.add(orderExpress);
 					}
 				} else if (fileName.equalsIgnoreCase(".xlsx")) {
@@ -190,6 +221,9 @@ public class OrderExpressController {
 						String orderId = row.getCell(0).getStringCellValue();
 						String expressId = row.getCell(1).getStringCellValue();
 						orderExpress = new OrderExpress(orderId, expressId);
+						if(StringUtils.isEmpty(orderId)){
+							continue;
+						}
 						orderExpressList.add(orderExpress);
 					}
 				}
