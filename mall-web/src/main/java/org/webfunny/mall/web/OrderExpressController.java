@@ -208,6 +208,10 @@ public class OrderExpressController {
 						if(StringUtils.isEmpty(orderId)){
 							continue;
 						}
+						List<OrderExpress> checkResult = orderExpressRepository.findByOrderId(orderId);
+						if(checkResult!=null&&!checkResult.isEmpty()){
+							continue;
+						}
 						orderExpressList.add(orderExpress);
 					}
 				} else if (fileName.equalsIgnoreCase(".xlsx")) {
@@ -222,6 +226,10 @@ public class OrderExpressController {
 						String expressId = row.getCell(1).getStringCellValue();
 						orderExpress = new OrderExpress(orderId, expressId);
 						if(StringUtils.isEmpty(orderId)){
+							continue;
+						}
+						List<OrderExpress> checkResult = orderExpressRepository.findByOrderId(orderId);
+						if(checkResult!=null&&!checkResult.isEmpty()){
 							continue;
 						}
 						orderExpressList.add(orderExpress);
