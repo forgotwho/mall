@@ -12,6 +12,7 @@ const OrderExpressPage = React.createClass({
       orderId:"",
       expressId:null,
       data: [],
+      searchButtonFlag:true,
     };
   },
   handleChange(event) {
@@ -22,11 +23,12 @@ const OrderExpressPage = React.createClass({
       return;
     }
     var param = {};
+    this.handleSlider();
     $.get('/api/order/receive/'+this.state.orderId,param,function(data){
       if(data.list==null){
-        this.setState({data: [],expressId:data.expressId,showResult:true});
+        this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true});
       }else{
-        this.setState({data: data.list,expressId:data.expressId,showResult:true});
+        this.setState({data: data.list,expressId:data.expressId,showResult:true,searchButtonFlag:true});
       }
 		}.bind(this));
   },
@@ -34,51 +36,29 @@ const OrderExpressPage = React.createClass({
     if(event.keyCode === 13){
       if(event.target.value!=null&&event.target.value!=""){
         var param = {};
+        this.handleSlider();
         $.get('/api/order/receive/'+event.target.value,param,function(data){
           if(data.list==null){
-            this.setState({data: [],expressId:data.expressId,showResult:true});
+            this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true});
           }else{
-            this.setState({data: data.list,expressId:data.expressId,showResult:true});
+            this.setState({data: data.list,expressId:data.expressId,showResult:true,searchButtonFlag:true});
           }
     		}.bind(this));
       }
     }
   },
-  handlerPopup(captchaObj){
-    // 成功的回调
-    $("#embed-submit").click(function (e) {
-        var validate = captchaObj.getValidate();
-        if (!validate) {
-            $("#notice")[0].className = "show";
-            setTimeout(function () {
-                $("#notice")[0].className = "hide";
-            }, 2000);
-            e.preventDefault();
-        }
+  handleSlider() {
+    var that = this;
+    var slider = new SliderUnlock("#slider",{
+			successLabelTip:"验证通功，请点按钮开始查询"	
+		},function(){
+      that.setState({searchButtonFlag:false});
     });
-    // 将验证码加到id为captcha的元素里，同时会有三个input的值：geetest_challenge, geetest_validate, geetest_seccode
-    captchaObj.appendTo("#embed-captcha");
-    captchaObj.onReady(function () {
-        $("#wait")[0].className = "hide";
-    });
+    slider.init();
+    $("#labelTip").html("拖动滑块验证");
   },
   componentDidMount() {	  
-    var that = this;
-    // 验证开始需要向网站主后台获取id，challenge，success（是否启用failback）
-    $.ajax({
-        url: "/api/verify/captcha?t=" + (new Date()).getTime(), // 加随机数防止缓存
-        type: "get",
-        dataType: "json",
-        success: function (data) {
-            // 使用initGeetest接口
-            initGeetest({
-                gt: data.gt,
-                challenge: data.challenge,
-                product: "embed", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
-                offline: !data.success // 表示用户后台检测极验服务器是否宕机，一般不需要关注
-            }, that.handlerPopup);
-        }
-    });
+    this.handleSlider();
   },
   render() {
     var display = "none";
@@ -91,6 +71,10 @@ const OrderExpressPage = React.createClass({
         <Timeline.Item key={data.upload_Time}><p style={{fontSize:16}}>{data.upload_Time}</p><p style={{fontSize:16}}>{data.processInfo}</p></Timeline.Item>
       );
     });
+    var searchButtonDiv = <Button disabled type="primary" style={{height:45,background:'#ad5ca0',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>;
+    if(!this.state.searchButtonFlag){
+      searchButtonDiv = <Button type="primary" style={{height:45,background:'#ad5ca0',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>;
+    }
     return (
       <div>
         <Row type="flex" justify="center">
@@ -99,16 +83,13 @@ const OrderExpressPage = React.createClass({
               <Input style={{height:45,fontSize:22,textAlign:'center',lineHeight:'30px'}} placeholder="请输入您的订单号" onChange={this.handleChange} onKeyUp={this.handlerKeyUp}/>
             </div>
             <div style={{marginTop:30,marginLeft:30,marginRight:30}}>
-              <form className="popup" action="/api/verify/verify" method="post">
-                <div id="embed-captcha"></div>
-                <p id="wait" className="show">正在加载验证码......</p>
-                <p id="notice" className="hide">请先拖动验证码到相应位置</p>
-                <br>
-                <input className="btn" id="embed-submit" type="submit" value="提交"/>
-            </form>
+              <div id="slider" style={{width:'100%'}}>
+                <div id="slider_bg"></div>
+                <span id="label">>></span> <span id="labelTip">拖动滑块验证</span> 
+              </div>
             </div>
             <div style={{marginTop:30,marginLeft:30,marginRight:30}}>
-              <Button type="primary" style={{height:45,background:'#ad5ca0',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>
+              {searchButtonDiv}
             </div>
             <div style={{marginTop:30,marginLeft:30,marginRight:30,textAlign:'left',display:display}}>
               <hr style={{marginTop:30,border:'1px dashed #000000'}}/>
