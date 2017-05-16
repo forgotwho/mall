@@ -47,14 +47,14 @@ const OrderExpressPage = React.createClass({
       return;
     }
     var param = {};
-    this.setState({message:'查询中，请稍等...或者到圆通官网输入单号查询',data:[]});
-    //this.setState({message:'服务器正在升级,请到圆通官网输入单号查询',data:[]});
+    this.setState({message:'查询中，请稍等或到圆通官网输入单号查询物流状态',data:[]});
+    //this.setState({message:'服务升级中，请稍等或到圆通官网输入单号查询物流状态',data:[]});
 		$.get('/api/order/yuantong/'+this.state.expressId,param,function(data){
       if(data.list==null){
-        this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true,message:'获取失败,请重试，或者到圆通官网输入单号查询'});
+        this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true,message:'获取失败，请重试或到圆通官网输入单号查询物流状态'});
       }else{
         if(data.list.length==0){
-          this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true,message:'快递信息未更新'});
+          this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true,message:'物流状态还未更新，请耐心等待'});
         }else{
           this.setState({data: data.list,expressId:data.expressId,showResult:true,searchButtonFlag:true,message:''});
         }
