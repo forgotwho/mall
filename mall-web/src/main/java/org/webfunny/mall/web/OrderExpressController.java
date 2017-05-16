@@ -93,7 +93,7 @@ public class OrderExpressController {
 		return orderResult;
 	}
 
-	@RequestMapping(value = "/receive/{orderId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/receive_/{orderId}", method = RequestMethod.GET)
 	public WaybillProcessInfoResult receiveAndSendMessageService(@PathVariable String orderId) {
 		WaybillProcessInfoResult waybillProcessInfoResult = new WaybillProcessInfoResult();
 		try{
@@ -151,6 +151,60 @@ public class OrderExpressController {
 			waybillProcessInfoResult.setExpressId(orderExpress.getExpressId());
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+		return waybillProcessInfoResult;
+	}
+	
+	@RequestMapping(value = "/yuantong/{number}", method = RequestMethod.GET)
+	public WaybillProcessInfoResult yuantong(@PathVariable String number) {
+		WaybillProcessInfoResult waybillProcessInfoResult = new WaybillProcessInfoResult();
+		try{
+			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+			String timestamp = sdf.format(new Date());
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("app_key").append(app_key).append("format").append(format).append("method").append(method)
+			.append("timestamp").append(timestamp).append("user_id").append(user_id).append("v").append(v);
+			
+			String sign = secretKey + sb.toString();
+			sign = MD5Util.MD5Encode(sign, "GBK");
+			sign = sign.toUpperCase();
+			String parameter = "sign=" + sign + "&app_key=" + app_key + "&format=" + format + "&method=" + method
+					+ "&timestamp=" + timestamp + "&user_id=" + user_id + "&v=" + v
+					+ "&param=<?xml version=\"1.0\"?><ufinterface><Result><WaybillCode><Number>" + number
+					+ "</Number></WaybillCode></Result></ufinterface>";
+			//System.out.println("parameter="+parameter);
+			URL url = new URL(urlStr);
+			URLConnection con = url.openConnection();
+			con.setDoOutput(true);
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded charset=UTF-8");
+			//con.setConnectTimeout(30000);
+			//con.setReadTimeout(30000);
+			OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
+			out.write(new String(parameter.getBytes("UTF-8")));
+			out.flush();
+			out.close();
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String line = "";
+			StringBuffer resultSB = new StringBuffer();
+			for (line = br.readLine(); line != null; line = br.readLine()) {
+				resultSB.append(line.trim());
+			}
+			Map map = XMLUtil.doXMLParse(resultSB.toString());
+			if(map.containsKey("Result")){
+				String result = (String)map.get("Result");
+				result = "<Result>" + result + "</Result>";
+				waybillProcessInfoResult = XMLUtil.toBean(result, WaybillProcessInfoResult.class);
+				List<WaybillProcessInfo> list = waybillProcessInfoResult.getList();
+				if(list!=null&&!list.isEmpty()){
+					Collections.reverse(list);
+					waybillProcessInfoResult.setList(list);
+				}
+			}
+			waybillProcessInfoResult.setExpressId(number);
+		}catch(Exception e){
+			e.printStackTrace();
+			waybillProcessInfoResult.setExpressId(number);
 		}
 		return waybillProcessInfoResult;
 	}
