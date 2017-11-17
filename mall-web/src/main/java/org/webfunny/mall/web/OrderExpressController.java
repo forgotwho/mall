@@ -47,6 +47,7 @@ import org.webfunny.mall.service.util.XMLUtil;
 public class OrderExpressController {
 	
 	private static String urlStr = "http://58.32.246.70:8002";
+//	private static String urlStr = "http://MarketingInterface.yto.net.cn";
 	private static String user_id = "EFUNBEST";
 	private static String app_key = "gKlwaN";
 	private static String format = "XML";

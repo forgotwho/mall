@@ -23,6 +23,7 @@ public class OrderExpress {
     	super();
         this.orderId = orderId;
         this.expressId = expressId;
+        this.createTime = new Date();
     }
 
     @Override
