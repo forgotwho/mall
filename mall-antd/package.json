@@ -45,7 +45,8 @@
     "lint"
   ],
   "scripts": {
-    "build": "atool-build -w --no-compress",
+    "build": "atool-build -w",
+    "dev": "atool-build -w --no-compress",
     "lint": "eslint --ext .js,.jsx src/",
     "start": "dora --plugins webpack,proxy",
     "test": "atool-test-mocha ./**/__tests__/*-test.js"
