@@ -1,0 +1,7 @@
+create table banner (id bigint not null auto_increment, color varchar(255), link varchar(255), memo varchar(255), name varchar(255), picture varchar(255), recommend bit, sort_num integer, source varchar(255), primary key (id));
+create table img (id bigint not null auto_increment, name varchar(255), size varchar(255), status varchar(255), thumb_url longtext, type varchar(255), uid varchar(255), primary key (id));
+create table order_express (id bigint not null auto_increment, create_time datetime, express_id varchar(255), order_id varchar(255), primary key (id));
+create table product (id bigint not null auto_increment, base_curve varchar(255), colors varchar(255), detail longtext, diameter varchar(255), name varchar(255), origin_place varchar(255), picture varchar(255), picture_set varchar(255), recommend bit, sort_num integer, tag_ids varchar(255), water_content varchar(255), wear_cycle varchar(255), primary key (id));
+create table product_tag (id bigint not null auto_increment, product_id bigint, tag_id bigint, primary key (id));
+create table tag (id bigint not null auto_increment, color varchar(255), memo varchar(255), name varchar(255), picture varchar(255), recommend bit, sort_num integer, primary key (id));
+create table user (id bigint not null auto_increment, password varchar(255), username varchar(255), primary key (id));

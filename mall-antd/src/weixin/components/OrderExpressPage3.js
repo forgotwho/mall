@@ -49,14 +49,14 @@ const OrderExpressPage = React.createClass({
     var param = {};
     this.setState({message:'查询中，请稍等或到圆通官网输入单号查询物流状态',data:[]});
     //this.setState({message:'服务升级中，请稍等或到圆通官网输入单号查询物流状态',data:[]});
-		$.get('/api/order/yuantong/'+this.state.expressId,param,function(data){
-      if(data.list==null){
-        this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true,message:'获取失败，请重试或到圆通官网输入单号查询物流状态'});
+		$.get('/api/order/kuaidi/'+this.state.expressId,param,function(data){
+      if(data.data==null){
+        this.setState({data: [],expressId:data.nu,showResult:true,searchButtonFlag:true,message:'获取失败，请重试或到圆通官网输入单号查询物流状态'});
       }else{
-        if(data.list.length==0){
-          this.setState({data: [],expressId:data.expressId,showResult:true,searchButtonFlag:true,message:'物流状态还未更新，请耐心等待'});
+        if(data.data.length==0){
+          this.setState({data: [],expressId:data.nu,showResult:true,searchButtonFlag:true,message:'物流状态还未更新，请耐心等待'});
         }else{
-          this.setState({data: data.list,expressId:data.expressId,showResult:true,searchButtonFlag:true,message:''});
+          this.setState({data: data.data,expressId:data.nu,showResult:true,searchButtonFlag:true,message:''});
         }
       }
 		}.bind(this));
@@ -97,12 +97,12 @@ const OrderExpressPage = React.createClass({
     var expressId = this.state.expressId;
     var itemList = this.state.data.map(function(data) {
       return (
-        <Timeline.Item key={data.upload_Time}><p style={{fontSize:16}}>{data.upload_Time}</p><p style={{fontSize:16}}>{data.processInfo}</p></Timeline.Item>
+        <Timeline.Item key={data.time}><p style={{fontSize:16}}>{data.time}</p><p style={{fontSize:16}}>{data.context}</p></Timeline.Item>
       );
     });
-    var searchButtonDiv = <Button disabled type="primary" style={{height:45,background:'#ad5ca0',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>;
+    var searchButtonDiv = <Button disabled type="primary" style={{height:45,background:'#ff139b',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>;
     if(!this.state.searchButtonFlag){
-      searchButtonDiv = <Button type="primary" style={{height:45,background:'#ad5ca0',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>;
+      searchButtonDiv = <Button type="primary" style={{height:45,background:'#ff139b',fontSize:22,width:'100%',lineHeight:'30px'}} onClick={this.handleSearch}>开始查询</Button>;
     }
     var result = <div></div>;
     if(expressId==null||expressId==""){
@@ -137,8 +137,6 @@ const OrderExpressPage = React.createClass({
             <div style={{marginTop:60,marginLeft:0,marginRight:0}}>
               <p style={{fontSize:22,height:30,marginTop:30,marginBottom:0,lineHeight:'30px'}}>扫描关注公众号  物流信息早知道</p>
               <center><img width="50%" src="/weixin/weixin.jpg"/></center>
-							<br/>
-              <a href="https://m.kuaidi100.com/" target="_blank">快递查询</a>
             </div>
           </Col>
         </Row>

@@ -39,15 +39,16 @@ import org.webfunny.mall.service.bean.WaybillProcessInfo;
 import org.webfunny.mall.service.bean.WaybillProcessInfoResult;
 import org.webfunny.mall.service.entity.OrderExpress;
 import org.webfunny.mall.service.repository.OrderExpressRepository;
+import org.webfunny.mall.service.util.ExpressUtil;
 import org.webfunny.mall.service.util.MD5Util;
 import org.webfunny.mall.service.util.XMLUtil;
 
 @RestController
 @RequestMapping("/api/order")
 public class OrderExpressController {
-	
+
 	private static String urlStr = "http://58.32.246.70:8002";
-//	private static String urlStr = "http://MarketingInterface.yto.net.cn";
+	// private static String urlStr = "http://MarketingInterface.yto.net.cn";
 	private static String user_id = "EFUNBEST";
 	private static String app_key = "gKlwaN";
 	private static String format = "XML";
@@ -55,7 +56,6 @@ public class OrderExpressController {
 	private static String v = "1.01";
 	private static String secretKey = "1MhIlN";
 	private static String dateFormat = "yyyy-MM-dd HH:mm:ss";
-	
 
 	@Autowired
 	private OrderExpressRepository orderExpressRepository;
@@ -72,32 +72,34 @@ public class OrderExpressController {
 		}
 		return orderExpressBeanList;
 	}
-	
-	@RequestMapping(value = "/search",method = RequestMethod.GET)
-	public Page<OrderExpressBean> page(@RequestParam(value = "page", required = false) Integer page,HttpServletResponse response) {
-		if(page==null||page.intValue()==0){
-			page = 1; 
+
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public Page<OrderExpressBean> page(@RequestParam(value = "page", required = false) Integer page,
+			HttpServletResponse response) {
+		if (page == null || page.intValue() == 0) {
+			page = 1;
 		}
-		page = page -1;
+		page = page - 1;
 		Integer size = 10;
 		Sort sort = new Sort(Direction.DESC, "id");
-		Pageable pageable = new PageRequest(page,size,sort);
+		Pageable pageable = new PageRequest(page, size, sort);
 		Page<OrderExpress> orderExpressPage = (Page<OrderExpress>) orderExpressRepository.findAll(pageable);
 		List<OrderExpressBean> orderExpressBeanList = new ArrayList<OrderExpressBean>();
-		Long index = Long.valueOf(orderExpressPage.getNumber()*orderExpressPage.getSize())+1;
+		Long index = Long.valueOf(orderExpressPage.getNumber() * orderExpressPage.getSize()) + 1;
 		for (OrderExpress orderExpress : orderExpressPage.getContent()) {
 			orderExpressBeanList.add(new OrderExpressBean(orderExpress.getId(), orderExpress.getOrderId(),
 					orderExpress.getExpressId(), index++));
 		}
-		Pageable orderPage = new PageRequest(orderExpressPage.getNumber(),orderExpressPage.getSize());
-		Page<OrderExpressBean> orderResult = new PageImpl<OrderExpressBean>(orderExpressBeanList,orderPage,orderExpressPage.getTotalElements());
+		Pageable orderPage = new PageRequest(orderExpressPage.getNumber(), orderExpressPage.getSize());
+		Page<OrderExpressBean> orderResult = new PageImpl<OrderExpressBean>(orderExpressBeanList, orderPage,
+				orderExpressPage.getTotalElements());
 		return orderResult;
 	}
 
 	@RequestMapping(value = "/receive_/{orderId}", method = RequestMethod.GET)
 	public WaybillProcessInfoResult receiveAndSendMessageService(@PathVariable String orderId) {
 		WaybillProcessInfoResult waybillProcessInfoResult = new WaybillProcessInfoResult();
-		try{
+		try {
 			List<OrderExpress> orderExpressList = orderExpressRepository.findByOrderId(orderId);
 			OrderExpress orderExpress = null;
 			if (orderExpressList == null || orderExpressList.isEmpty()) {
@@ -105,16 +107,16 @@ public class OrderExpressController {
 			} else {
 				orderExpress = orderExpressList.get(0);
 			}
-			//System.out.println("getExpressId="+orderExpress.getExpressId());
+			// System.out.println("getExpressId="+orderExpress.getExpressId());
 			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 			String timestamp = sdf.format(new Date());
-			
+
 			String number = orderExpress.getExpressId();
-			
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("app_key").append(app_key).append("format").append(format).append("method").append(method)
-			.append("timestamp").append(timestamp).append("user_id").append(user_id).append("v").append(v);
-			
+					.append("timestamp").append(timestamp).append("user_id").append(user_id).append("v").append(v);
+
 			String sign = secretKey + sb.toString();
 			sign = MD5Util.MD5Encode(sign, "GBK");
 			sign = sign.toUpperCase();
@@ -122,12 +124,12 @@ public class OrderExpressController {
 					+ "&timestamp=" + timestamp + "&user_id=" + user_id + "&v=" + v
 					+ "&param=<?xml version=\"1.0\"?><ufinterface><Result><WaybillCode><Number>" + number
 					+ "</Number></WaybillCode></Result></ufinterface>";
-			//System.out.println("parameter="+parameter);
+			// System.out.println("parameter="+parameter);
 			URL url = new URL(urlStr);
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded charset=UTF-8");
-			
+
 			OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 			out.write(new String(parameter.getBytes("UTF-8")));
 			out.flush();
@@ -139,34 +141,34 @@ public class OrderExpressController {
 				resultSB.append(line.trim());
 			}
 			Map map = XMLUtil.doXMLParse(resultSB.toString());
-			if(map.containsKey("Result")){
-				String result = (String)map.get("Result");
+			if (map.containsKey("Result")) {
+				String result = (String) map.get("Result");
 				result = "<Result>" + result + "</Result>";
 				waybillProcessInfoResult = XMLUtil.toBean(result, WaybillProcessInfoResult.class);
 				List<WaybillProcessInfo> list = waybillProcessInfoResult.getList();
-				if(list!=null&&!list.isEmpty()){
+				if (list != null && !list.isEmpty()) {
 					Collections.reverse(list);
 					waybillProcessInfoResult.setList(list);
 				}
 			}
 			waybillProcessInfoResult.setExpressId(orderExpress.getExpressId());
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return waybillProcessInfoResult;
 	}
-	
+
 	@RequestMapping(value = "/yuantong/{number}", method = RequestMethod.GET)
 	public WaybillProcessInfoResult yuantong(@PathVariable String number) {
 		WaybillProcessInfoResult waybillProcessInfoResult = new WaybillProcessInfoResult();
-		try{
+		try {
 			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 			String timestamp = sdf.format(new Date());
-			
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("app_key").append(app_key).append("format").append(format).append("method").append(method)
-			.append("timestamp").append(timestamp).append("user_id").append(user_id).append("v").append(v);
-			
+					.append("timestamp").append(timestamp).append("user_id").append(user_id).append("v").append(v);
+
 			String sign = secretKey + sb.toString();
 			sign = MD5Util.MD5Encode(sign, "GBK");
 			sign = sign.toUpperCase();
@@ -174,13 +176,13 @@ public class OrderExpressController {
 					+ "&timestamp=" + timestamp + "&user_id=" + user_id + "&v=" + v
 					+ "&param=<?xml version=\"1.0\"?><ufinterface><Result><WaybillCode><Number>" + number
 					+ "</Number></WaybillCode></Result></ufinterface>";
-			//System.out.println("parameter="+parameter);
+			// System.out.println("parameter="+parameter);
 			URL url = new URL(urlStr);
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded charset=UTF-8");
-			//con.setConnectTimeout(30000);
-			//con.setReadTimeout(30000);
+			// con.setConnectTimeout(30000);
+			// con.setReadTimeout(30000);
 			OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 			out.write(new String(parameter.getBytes("UTF-8")));
 			out.flush();
@@ -192,22 +194,34 @@ public class OrderExpressController {
 				resultSB.append(line.trim());
 			}
 			Map map = XMLUtil.doXMLParse(resultSB.toString());
-			if(map.containsKey("Result")){
-				String result = (String)map.get("Result");
+			if (map.containsKey("Result")) {
+				String result = (String) map.get("Result");
 				result = "<Result>" + result + "</Result>";
 				waybillProcessInfoResult = XMLUtil.toBean(result, WaybillProcessInfoResult.class);
 				List<WaybillProcessInfo> list = waybillProcessInfoResult.getList();
-				if(list!=null&&!list.isEmpty()){
+				if (list != null && !list.isEmpty()) {
 					Collections.reverse(list);
 					waybillProcessInfoResult.setList(list);
 				}
 			}
 			waybillProcessInfoResult.setExpressId(number);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			waybillProcessInfoResult.setExpressId(number);
 		}
 		return waybillProcessInfoResult;
+	}
+
+	@RequestMapping(value = "/kuaidi/{number}", method = RequestMethod.GET)
+	public Object kuaidi(@PathVariable String number) {
+		try {
+			ExpressUtil expressUtil = new ExpressUtil();
+			String comCode = expressUtil.getVendor(number);
+			return expressUtil.getVendorResult(number, comCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@RequestMapping(value = "/{orderId}", method = RequestMethod.GET)
@@ -260,11 +274,11 @@ public class OrderExpressController {
 						String orderId = row.getCell(0).getStringCellValue();
 						String expressId = row.getCell(1).getStringCellValue();
 						orderExpress = new OrderExpress(orderId, expressId);
-						if(StringUtils.isEmpty(orderId)){
+						if (StringUtils.isEmpty(orderId)) {
 							continue;
 						}
 						List<OrderExpress> checkResult = orderExpressRepository.findByOrderId(orderId);
-						if(checkResult!=null&&!checkResult.isEmpty()){
+						if (checkResult != null && !checkResult.isEmpty()) {
 							continue;
 						}
 						orderExpressList.add(orderExpress);
@@ -280,11 +294,11 @@ public class OrderExpressController {
 						String orderId = row.getCell(0).getStringCellValue();
 						String expressId = row.getCell(1).getStringCellValue();
 						orderExpress = new OrderExpress(orderId, expressId);
-						if(StringUtils.isEmpty(orderId)){
+						if (StringUtils.isEmpty(orderId)) {
 							continue;
 						}
 						List<OrderExpress> checkResult = orderExpressRepository.findByOrderId(orderId);
-						if(checkResult!=null&&!checkResult.isEmpty()){
+						if (checkResult != null && !checkResult.isEmpty()) {
 							continue;
 						}
 						orderExpressList.add(orderExpress);
